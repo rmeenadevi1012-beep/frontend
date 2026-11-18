@@ -1,0 +1,18 @@
+import { useState } from 'react'
+import './App.css'
+import { BrowserRouter,  } from 'react-router-dom'
+import Sidebar from './components/Sidebar'
+
+function App() {
+
+  return (
+    <>
+    <BrowserRouter>
+     <Sidebar/>
+    </BrowserRouter>
+    
+    </>
+  )
+}
+
+export default App
