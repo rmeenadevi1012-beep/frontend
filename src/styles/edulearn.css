@@ -1,0 +1,1583 @@
+/* EduLearn CRM - Complete Modern Purple Dashboard Stylesheet */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --el-purple-main: #6e34e2;
+  --el-purple-dark: #270e54;
+  --el-purple-darker: #17073b;
+  --el-purple-active: #7642ea;
+  --el-purple-gradient-start: #4c1ebd;
+  --el-purple-gradient-mid: #6826d7;
+  --el-purple-gradient-end: #9a4cf9;
+  --el-bg-main: #f4f6fa;
+  --el-card-bg: #ffffff;
+  --el-text-primary: #1e202e;
+  --el-text-secondary: #707584;
+  --el-text-muted: #94a3b8;
+  --el-border-light: #eceff6;
+  --el-green-status: #10b981;
+  --el-green-bg: #dcfce7;
+  --el-green-text: #15803d;
+  --el-orange-status: #f97316;
+  --el-orange-bg: #ffedd5;
+  --el-orange-text: #c2410c;
+  --el-font: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --el-radius-sm: 8px;
+  --el-radius-md: 12px;
+  --el-radius-lg: 16px;
+  --el-radius-xl: 20px;
+  --el-shadow-card: 0 2px 10px rgba(18, 25, 40, 0.04);
+  --el-shadow-hover: 0 8px 24px rgba(110, 52, 226, 0.12);
+}
+
+/* Global Reset for Root inside App */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--el-font);
+  background-color: var(--el-bg-main);
+  color: var(--el-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  border: none !important;
+  min-height: 100vh;
+  display: block !important;
+  background-color: var(--el-bg-main);
+}
+
+/* App Layout Container */
+.el-app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  background-color: var(--el-bg-main);
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   1. STRICT SIDEBAR STYLES (Exact match to reference screenshot)
+   ========================================================================== */
+.el-sidebar {
+  width: 230px;
+  min-width: 230px;
+  background: linear-gradient(180deg, #18073d 0%, #210a52 35%, #2d0d69 65%, #3f107f 85%, #561699 100%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 14px 24px 14px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 4px 0 24px rgba(18, 5, 42, 0.2);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Subtle organic wavy lines at bottom of sidebar matching screenshot */
+.el-sidebar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 220px;
+  background-image: radial-gradient(circle at 10% 90%, rgba(138, 76, 248, 0.28) 0%, transparent 60%),
+                    radial-gradient(circle at 90% 100%, rgba(168, 85, 247, 0.22) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.el-sidebar-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Sidebar Brand / Title Header */
+.el-sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 24px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.el-sidebar-logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.2));
+}
+
+.el-sidebar-title {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin: 0;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+.el-sidebar-subtitle {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0;
+  color: #ffffff;
+}
+
+/* Sidebar Menu */
+.el-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.el-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--el-radius-md);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  outline: none;
+}
+
+.el-sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Active Highlight - Bright Purple Pill matching screenshot */
+.el-sidebar-link.active {
+  background: var(--el-purple-active);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(118, 66, 234, 0.45);
+}
+
+.el-sidebar-link svg {
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+/* Sidebar Logout Pin to Bottom */
+.el-sidebar-bottom {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.el-sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--el-radius-md);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+}
+
+.el-sidebar-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+/* ==========================================================================
+   2. MAIN CONTENT AREA & TOP NAVIGATION BAR
+   ========================================================================== */
+.el-main-wrapper {
+  margin-left: 230px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+  background-color: var(--el-bg-main);
+  transition: margin-left 0.3s ease;
+}
+
+/* Top Navbar */
+.el-navbar {
+  height: 68px;
+  background: #ffffff;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--el-border-light);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.el-navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  max-width: 540px;
+}
+
+.el-hamburger-btn {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--el-text-primary);
+  transition: background-color 0.2s ease;
+}
+
+.el-hamburger-btn:hover {
+  background-color: #f1f3f9;
+}
+
+/* Top Search Bar */
+.el-search-container {
+  display: flex;
+  align-items: center;
+  background-color: #eff2f8;
+  border-radius: 20px;
+  padding: 8px 16px;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.el-search-container:focus-within {
+  background-color: #ffffff;
+  border-color: #c7d2fe;
+  box-shadow: 0 0 0 3px rgba(110, 52, 226, 0.1);
+}
+
+.el-search-icon-left {
+  color: #717789;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.el-search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 13.5px;
+  font-family: var(--el-font);
+  color: var(--el-text-primary);
+}
+
+.el-search-input::placeholder {
+  color: #798093;
+}
+
+.el-search-icon-right {
+  color: #717789;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+/* Navbar Right (Notifications & Admin Profile) */
+.el-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.el-notification-btn {
+  background: transparent;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1e1b4b;
+  transition: background-color 0.2s;
+}
+
+.el-notification-btn:hover {
+  background-color: #f1f3f9;
+}
+
+.el-notification-badge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 700;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+}
+
+/* Admin Profile Container */
+.el-admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 20px;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.el-admin-profile:hover {
+  background-color: #f4f6fa;
+}
+
+.el-admin-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6e34e2 0%, #581ac4 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(110, 52, 226, 0.35);
+}
+
+.el-admin-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--el-text-primary);
+}
+
+.el-admin-chevron {
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+/* ==========================================================================
+   3. DASHBOARD PAGE CONTENT & WELCOME BANNER
+   ========================================================================== */
+.el-dashboard-content {
+  padding: 24px 28px 36px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Welcome Banner */
+.el-welcome-banner {
+  background: linear-gradient(98deg, var(--el-purple-gradient-start) 0%, var(--el-purple-gradient-mid) 38%, #7e36f0 70%, var(--el-purple-gradient-end) 100%);
+  border-radius: var(--el-radius-xl);
+  padding: 26px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(97, 38, 215, 0.24);
+  min-height: 130px;
+}
+
+/* Subtle glowing backdrop shapes inside banner */
+.el-welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: 15%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.el-banner-text {
+  position: relative;
+  z-index: 2;
+  max-width: 550px;
+}
+
+.el-banner-title {
+  font-size: 27px;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.3px;
+}
+
+.el-banner-subtitle {
+  font-size: 15px;
+  font-weight: 400;
+  margin: 6px 0 0 0;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.el-banner-illustration {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.el-banner-illustration svg {
+  max-height: 125px;
+  width: auto;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.15));
+}
+
+/* ==========================================================================
+   4. STATISTICS CARDS (4 Columns)
+   ========================================================================== */
+.el-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.el-stat-card {
+  background-color: var(--el-card-bg);
+  border-radius: var(--el-radius-lg);
+  padding: 18px 20px;
+  border: 1px solid var(--el-border-light);
+  box-shadow: var(--el-shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.el-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.el-stat-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.el-stat-icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--el-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.el-stat-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.el-stat-value {
+  font-size: 23px;
+  font-weight: 700;
+  color: var(--el-text-primary);
+  line-height: 1.15;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.el-stat-label {
+  font-size: 13px;
+  color: var(--el-text-secondary);
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+.el-stat-trend {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--el-green-status);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   5. MIDDLE SECTION (User Overview + Recent Enrollments)
+   ========================================================================== */
+.el-middle-grid {
+  display: grid;
+  grid-template-columns: 1.18fr 1fr;
+  gap: 18px;
+}
+
+.el-dashboard-card {
+  background-color: var(--el-card-bg);
+  border-radius: var(--el-radius-lg);
+  padding: 20px 22px;
+  border: 1px solid var(--el-border-light);
+  box-shadow: var(--el-shadow-card);
+  display: flex;
+  flex-direction: column;
+}
+
+.el-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.el-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.el-card-header-icon {
+  color: var(--el-purple-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.el-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--el-text-primary);
+  margin: 0;
+}
+
+.el-card-view-all {
+  color: var(--el-purple-main);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.el-card-view-all:hover {
+  color: #551dbf;
+  text-decoration: underline;
+}
+
+/* Chart Legend */
+.el-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 12.5px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.el-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.el-legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.el-legend-dot.purple {
+  background-color: var(--el-purple-main);
+}
+
+.el-legend-dot.green {
+  background-color: var(--el-green-status);
+}
+
+.el-chart-wrapper {
+  width: 100%;
+  height: 220px;
+}
+
+/* Recent Enrollments Table */
+.el-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.el-enrollments-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.el-enrollments-table th {
+  text-align: left;
+  padding: 8px 10px;
+  color: #8b93a7;
+  font-weight: 600;
+  font-size: 12px;
+  border-bottom: 1px solid #f1f3f8;
+  white-space: nowrap;
+}
+
+.el-enrollments-table td {
+  padding: 10px 10px;
+  border-bottom: 1px solid #f6f7fb;
+  color: var(--el-text-primary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.el-enrollments-table tr:last-child td {
+  border-bottom: none;
+}
+
+.el-status-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.el-status-badge.confirmed {
+  background-color: var(--el-green-bg);
+  color: var(--el-green-text);
+}
+
+.el-status-badge.pending {
+  background-color: var(--el-orange-bg);
+  color: var(--el-orange-text);
+}
+
+/* ==========================================================================
+   6. BOTTOM SECTION (Recent Messages + Upcoming Events + Quick Actions)
+   ========================================================================== */
+.el-bottom-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1.05fr 0.85fr;
+  gap: 18px;
+}
+
+/* Recent Messages */
+.el-messages-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.el-messages-table th {
+  text-align: left;
+  padding: 6px 8px;
+  color: #8b93a7;
+  font-weight: 600;
+  font-size: 12px;
+  border-bottom: 1px solid #f1f3f8;
+}
+
+.el-messages-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #f6f7fb;
+  font-weight: 500;
+}
+
+.el-messages-table tr:last-child td {
+  border-bottom: none;
+}
+
+.el-msg-sender {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.el-msg-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #6e34e2;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.el-msg-name {
+  font-weight: 600;
+  color: var(--el-text-primary);
+  white-space: nowrap;
+}
+
+.el-msg-subject {
+  color: #4b5563;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.el-msg-date {
+  color: #6b7280;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Upcoming Events Card */
+.el-event-box {
+  background-color: #f7f6fe;
+  border-radius: var(--el-radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #ebe8fc;
+}
+
+.el-event-date-badge {
+  background-color: #ebe7fe;
+  border-radius: 10px;
+  width: 58px;
+  height: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid #ddd7fd;
+}
+
+.el-event-day {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e1b4b;
+  line-height: 1;
+}
+
+.el-event-month {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4338ca;
+  margin-top: 2px;
+}
+
+.el-event-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.el-event-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--el-text-primary);
+  margin: 0;
+}
+
+.el-event-time {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.el-event-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--el-purple-main);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Quick Actions Grid */
+.el-quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.el-quick-action-btn {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--el-radius-md);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--el-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.el-quick-action-btn svg {
+  color: var(--el-purple-main);
+}
+
+.el-quick-action-btn:hover {
+  border-color: var(--el-purple-main);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(110, 52, 226, 0.12);
+  color: var(--el-purple-main);
+}
+
+/* ==========================================================================
+   7. MODAL DIALOGS, DROPDOWNS & OVERLAYS
+   ========================================================================== */
+.el-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 7, 34, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: elFadeIn 0.2s ease;
+}
+
+.el-modal-container {
+  background: #ffffff;
+  border-radius: var(--el-radius-xl);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(15, 7, 34, 0.25);
+  display: flex;
+  flex-direction: column;
+  animation: elScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.el-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--el-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.el-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--el-text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.el-modal-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.el-modal-close-btn:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.el-modal-body {
+  padding: 24px;
+}
+
+.el-form-group {
+  margin-bottom: 16px;
+}
+
+.el-form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.el-form-input, .el-form-select, .el-form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--el-radius-sm);
+  border: 1px solid #cbd5e1;
+  font-family: var(--el-font);
+  font-size: 13.5px;
+  color: var(--el-text-primary);
+  background-color: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.el-form-input:focus, .el-form-select:focus, .el-form-textarea:focus {
+  outline: none;
+  border-color: var(--el-purple-main);
+  box-shadow: 0 0 0 3px rgba(110, 52, 226, 0.15);
+}
+
+.el-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.el-modal-footer {
+  padding: 18px 24px;
+  border-top: 1px solid var(--el-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  background-color: #f8fafc;
+  border-bottom-left-radius: var(--el-radius-xl);
+  border-bottom-right-radius: var(--el-radius-xl);
+}
+
+.el-btn {
+  padding: 9px 18px;
+  border-radius: var(--el-radius-sm);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.el-btn-secondary {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+.el-btn-secondary:hover {
+  background-color: #cbd5e1;
+}
+
+.el-btn-primary {
+  background-color: var(--el-purple-main);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(110, 52, 226, 0.3);
+}
+
+.el-btn-primary:hover {
+  background-color: #5b21b6;
+}
+
+.el-btn-danger {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.el-btn-danger:hover {
+  background-color: #dc2626;
+}
+
+/* Dropdown Menu (Notifications & Admin) */
+.el-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #ffffff;
+  border-radius: var(--el-radius-lg);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.15);
+  border: 1px solid var(--el-border-light);
+  width: 320px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: elFadeIn 0.15s ease;
+}
+
+.el-dropdown-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--el-border-light);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.el-dropdown-item {
+  padding: 12px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom: 1px solid #f8fafc;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.el-dropdown-item:hover {
+  background-color: #f8fafc;
+}
+
+.el-dropdown-item.unread {
+  background-color: #f5f3ff;
+}
+
+.el-notification-text-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--el-text-primary);
+  margin: 0;
+}
+
+.el-notification-text-desc {
+  font-size: 12px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+
+.el-notification-text-time {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   8. ADDITIONAL PAGES (Courses, Services, Gallery, FAQ, Contact)
+   Follow the same EduLearn CRM purple design system
+   ========================================================================== */
+.el-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.el-page-title-group h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--el-text-primary);
+  margin: 0;
+}
+
+.el-page-title-group p {
+  font-size: 14px;
+  color: var(--el-text-secondary);
+  margin: 4px 0 0 0;
+}
+
+/* Courses Grid */
+.el-courses-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.el-course-card {
+  background: #ffffff;
+  border-radius: var(--el-radius-lg);
+  border: 1px solid var(--el-border-light);
+  box-shadow: var(--el-shadow-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+}
+
+.el-course-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--el-shadow-hover);
+}
+
+.el-course-card-top {
+  background: linear-gradient(135deg, #ede7fd 0%, #dcd2f8 100%);
+  padding: 20px;
+  position: relative;
+}
+
+.el-course-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #ffffff;
+  color: var(--el-purple-main);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.el-course-code {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b21a8;
+  text-transform: uppercase;
+}
+
+.el-course-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1e1b4b;
+  margin: 6px 0 0 0;
+}
+
+.el-course-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.el-course-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.el-course-meta-row strong {
+  color: var(--el-text-primary);
+}
+
+/* Services Grid */
+.el-services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.el-service-card {
+  background: #ffffff;
+  border-radius: var(--el-radius-lg);
+  border: 1px solid var(--el-border-light);
+  padding: 24px;
+  box-shadow: var(--el-shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.2s;
+}
+
+.el-service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--el-shadow-hover);
+  border-color: #c4b5fd;
+}
+
+.el-service-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #ede6fe;
+  color: var(--el-purple-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.el-service-title {
+  font-size: 16.5px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--el-text-primary);
+}
+
+.el-service-desc {
+  font-size: 13.5px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Gallery Grid */
+.el-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.el-gallery-item {
+  background: #ffffff;
+  border-radius: var(--el-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--el-border-light);
+  box-shadow: var(--el-shadow-card);
+  transition: all 0.25s ease;
+}
+
+.el-gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--el-shadow-hover);
+}
+
+.el-gallery-image-box {
+  height: 190px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.el-gallery-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.el-gallery-item:hover .el-gallery-image-box img {
+  transform: scale(1.05);
+}
+
+.el-gallery-info {
+  padding: 16px 18px;
+}
+
+.el-gallery-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--el-purple-main);
+  text-transform: uppercase;
+}
+
+.el-gallery-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 4px 0 6px 0;
+  color: var(--el-text-primary);
+}
+
+.el-gallery-desc {
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* FAQ Accordion */
+.el-faq-container {
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.el-faq-item {
+  background: #ffffff;
+  border-radius: var(--el-radius-md);
+  border: 1px solid var(--el-border-light);
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.el-faq-question-btn {
+  width: 100%;
+  padding: 18px 22px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--el-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-family: var(--el-font);
+}
+
+.el-faq-question-btn:hover {
+  color: var(--el-purple-main);
+}
+
+.el-faq-answer {
+  padding: 0 22px 18px 22px;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+  border-top: 1px solid #f8fafc;
+}
+
+/* Contact Page */
+.el-contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
+}
+
+.el-contact-card {
+  background: #ffffff;
+  border-radius: var(--el-radius-lg);
+  border: 1px solid var(--el-border-light);
+  padding: 24px;
+  box-shadow: var(--el-shadow-card);
+}
+
+/* Toast Notification */
+.el-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #1e1b4b;
+  color: #ffffff;
+  padding: 14px 22px;
+  border-radius: var(--el-radius-md);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2000;
+  animation: elSlideUp 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  border-left: 4px solid var(--el-purple-main);
+}
+
+/* ==========================================================================
+   9. RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+@keyframes elFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes elScaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes elSlideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 1200px) {
+  .el-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .el-middle-grid {
+    grid-template-columns: 1fr;
+  }
+  .el-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+  .el-courses-grid, .el-services-grid, .el-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .el-sidebar {
+    transform: translateX(-100%);
+  }
+  .el-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  .el-main-wrapper {
+    margin-left: 0;
+  }
+  .el-welcome-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+  }
+  .el-banner-illustration {
+    margin-top: 14px;
+    align-self: center;
+  }
+  .el-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .el-contact-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .el-navbar {
+    padding: 0 16px;
+  }
+  .el-dashboard-content {
+    padding: 16px;
+  }
+  .el-courses-grid, .el-services-grid, .el-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+  .el-search-container {
+    max-width: 200px;
+  }
+}
+
+/* ==========================================================================
+   9. QUICK VIEW TOGGLE & ZERO-STATE STYLES
+   ========================================================================== */
+.el-view-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #6e34e2, #8b5cf6);
+  color: #ffffff;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(110, 52, 226, 0.25);
+  font-family: var(--el-font);
+}
+
+.el-view-toggle-btn:hover {
+  background: linear-gradient(135deg, #5b28c2, #7c3aed);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(110, 52, 226, 0.35);
+}
+
+.el-badge-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ede6fe;
+  color: #6e34e2;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 8px;
+}
+
+.el-badge-count.orange {
+  background: #fff1e6;
+  color: #f97316;
+}
+
+.el-empty-state-box {
+  padding: 36px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.el-empty-state-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.el-empty-state-icon.purple {
+  background: #ede6fe;
+  color: #6e34e2;
+}
+
+.el-empty-state-icon.blue {
+  background: #e8f4fd;
+  color: #1e88e5;
+}
+
+.el-empty-state-icon.orange {
+  background: #fff1e6;
+  color: #f97316;
+}
+
+.el-empty-state-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e202e;
+  margin: 0 0 6px 0;
+}
+
+.el-empty-state-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.el-empty-state-btn {
+  margin-top: 14px;
+  background: #ede6fe;
+  color: #6e34e2;
+  border: 1px solid #d8b4fe;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--el-font);
+}
+
+.el-empty-state-btn:hover {
+  background: #6e34e2;
+  color: #ffffff;
+}
