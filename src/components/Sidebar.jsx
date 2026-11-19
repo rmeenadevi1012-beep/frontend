@@ -9,6 +9,7 @@ import {
   HelpCircle,
   Mail,
   LogOut,
+  X,
 } from 'lucide-react';
 
 function Sidebar({ isMobileOpen, onClose, onLogoutClick }) {
@@ -22,6 +23,9 @@ function Sidebar({ isMobileOpen, onClose, onLogoutClick }) {
 
   const handleLogout = (e) => {
     e.preventDefault();
+    if (onClose) {
+      onClose();
+    }
     if (onLogoutClick) {
       onLogoutClick();
     } else {
@@ -32,6 +36,16 @@ function Sidebar({ isMobileOpen, onClose, onLogoutClick }) {
   return (
     <aside className={`el-sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
       <div className="el-sidebar-content">
+        {/* Mobile Close Button */}
+        <button
+          type="button"
+          className="el-sidebar-close-btn"
+          onClick={onClose}
+          aria-label="Close sidebar"
+        >
+          <X size={20} />
+        </button>
+
         {/* Brand Header */}
         <NavLink to="/" className="el-sidebar-header" onClick={handleNavClick}>
           <div className="el-sidebar-logo-icon">

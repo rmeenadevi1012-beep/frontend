@@ -249,6 +249,15 @@ function App() {
           onLogoutClick={() => setActiveModal('logout')}
         />
 
+        {/* Mobile Sidebar Backdrop */}
+        {isMobileOpen && (
+          <div
+            className="el-sidebar-backdrop"
+            onClick={() => setIsMobileOpen(false)}
+            aria-label="Close sidebar backdrop"
+          />
+        )}
+
         {/* 2. Main Content Wrapper */}
         <div className="el-main-wrapper">
           {/* Top Navbar with Public Enrollment Toggle, Bell Badge & Admin Dropdown */}

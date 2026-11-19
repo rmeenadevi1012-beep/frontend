@@ -98,12 +98,14 @@ function Navbar({
           {isPublicEnrollment ? (
             <>
               <LayoutDashboard size={15} />
-              <span>Admin Dashboard</span>
+              <span className="el-toggle-text-full">Admin Dashboard</span>
+              <span className="el-toggle-text-short">Admin</span>
             </>
           ) : (
             <>
               <GraduationCap size={15} />
-              <span>Public Enrollment View</span>
+              <span className="el-toggle-text-full">Public Enrollment View</span>
+              <span className="el-toggle-text-short">Public View</span>
             </>
           )}
         </button>
