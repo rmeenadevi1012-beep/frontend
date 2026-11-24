@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import './styles/edulearn.css';
+
+// Components
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
-import HomeDashboard from './components/pages/HomeDashboard';
-import CoursesPage from './components/pages/CoursesPage';
-import ServicesPage from './components/pages/ServicesPage';
-import GalleryPage from './components/pages/GalleryPage';
-import FaqPage from './components/pages/FaqPage';
-import ContactPage from './components/pages/ContactPage';
-import PublicEnrollmentPage from './components/pages/PublicEnrollmentPage';
+
+// Pages
+import Dashboard from './pages/Dashboard';
+import Courses from './pages/Courses';
+import Services from './pages/Services';
+import Gallery from './pages/Gallery';
+import Faq from './pages/Faq';
+import Contact from './pages/Contact';
+import PublicEnrollment from './pages/PublicEnrollment';
+import AdminLogin from './pages/AdminLogin';
+import AdminRegister from './pages/AdminRegister';
+
+// Additional CRM pages with 0 baseline counts
+import Students from './pages/Students';
+import Enquiries from './pages/Enquiries';
+import Admissions from './pages/Admissions';
+import Staff from './pages/Staff';
+import Batches from './pages/Batches';
+import Payments from './pages/Payments';
+import Certificates from './pages/Certificates';
 
 // Modals
 import AddCourseModal from './components/modals/AddCourseModal';
@@ -19,19 +34,34 @@ import ManageUsersModal from './components/modals/ManageUsersModal';
 import LogoutModal from './components/modals/LogoutModal';
 import SearchResultsModal from './components/modals/SearchResultsModal';
 
-// Zero Initial Mock Data
+// Zero Initial Mock Data & 15 Exact Courses from Reference 2
+import { initial15Courses } from './data/coursesData';
 import {
   initialStats,
   userOverviewChartData,
   initialEnrollments,
   initialMessages,
   initialEvents,
-  initialCourses,
   initialServices,
   initialNotifications,
 } from './data/mockData';
 
-// Helper to safely read from localStorage
+// Safe helper to read from localStorage with intelligent fallback
+const getStoredCourses = () => {
+  try {
+    const item = localStorage.getItem('edulearn_courses');
+    if (item) {
+      const parsed = JSON.parse(item);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch {
+    // fallback
+  }
+  return initial15Courses;
+};
+
 const getStored = (key, fallback) => {
   try {
     const item = localStorage.getItem(`edulearn_${key}`);
@@ -41,16 +71,63 @@ const getStored = (key, fallback) => {
   }
 };
 
-function App() {
-  // Application Data States (Zero-initial with localStorage persistence)
-  const [stats, setStats] = useState(() => getStored('stats', initialStats));
-  const [chartData, setChartData] = useState(() => getStored('chart', userOverviewChartData));
+// Protected Route Component
+function ProtectedRoute({ user, children }) {
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+// Inner App Layout to access router hooks
+function AppLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Auth State
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem('edulearn_auth_user');
+      return stored ? JSON.parse(stored) : {
+        id: 'admin-root',
+        fullName: 'System Administrator',
+        username: 'admin',
+        email: 'admin@edulearn.edu',
+        role: 'Super Admin',
+      };
+    } catch {
+      return null;
+    }
+  });
+
+  // Application Data States (Courses initialized to exactly 15, all other counts strictly 0)
+  const [courses, setCourses] = useState(getStoredCourses);
   const [enrollments, setEnrollments] = useState(() => getStored('enrollments', initialEnrollments));
-  const [courses, setCourses] = useState(() => getStored('courses', initialCourses));
   const [messages, setMessages] = useState(() => getStored('messages', initialMessages));
   const [notifications, setNotifications] = useState(() => getStored('notifications', initialNotifications));
   const [events] = useState(initialEvents);
   const [services] = useState(initialServices);
+
+  // Synchronize stats dynamically with live courses count
+  const [stats, setStats] = useState(() => {
+    const savedStats = getStored('stats', initialStats);
+    return savedStats.map((s) => {
+      if (s.id === 'courses') {
+        return { ...s, value: courses.length.toString() };
+      }
+      return s;
+    });
+  });
+
+  // Chart data
+  const [chartData, setChartData] = useState(() => {
+    const savedChart = getStored('chart', userOverviewChartData);
+    return savedChart.map((item) => ({
+      ...item,
+      Students: 0,
+      Courses: courses.length,
+    }));
+  });
 
   // UI States
   const [searchTerm, setSearchTerm] = useState('');
@@ -62,16 +139,26 @@ function App() {
   // Synchronize state changes to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('edulearn_stats', JSON.stringify(stats));
-      localStorage.setItem('edulearn_chart', JSON.stringify(chartData));
-      localStorage.setItem('edulearn_enrollments', JSON.stringify(enrollments));
       localStorage.setItem('edulearn_courses', JSON.stringify(courses));
+      localStorage.setItem('edulearn_enrollments', JSON.stringify(enrollments));
       localStorage.setItem('edulearn_messages', JSON.stringify(messages));
       localStorage.setItem('edulearn_notifications', JSON.stringify(notifications));
+      localStorage.setItem('edulearn_stats', JSON.stringify(stats));
+      localStorage.setItem('edulearn_chart', JSON.stringify(chartData));
     } catch {
       // Ignore write errors
     }
-  }, [stats, chartData, enrollments, courses, messages, notifications]);
+  }, [courses, enrollments, messages, notifications, stats, chartData]);
+
+  // Keep stats in sync when courses length changes
+  useEffect(() => {
+    setStats((prev) =>
+      prev.map((s) => (s.id === 'courses' ? { ...s, value: courses.length.toString() } : s))
+    );
+    setChartData((prev) =>
+      prev.map((item) => ({ ...item, Courses: courses.length }))
+    );
+  }, [courses.length]);
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -80,31 +167,10 @@ function App() {
     }, 3200);
   };
 
-  // 1. Action: Add New Course (Increments Total Courses by +1)
+  // 1. Add New Course
   const handleAddCourse = (newCourse) => {
     setCourses((prev) => [newCourse, ...prev]);
 
-    // Increment Total Courses Stat
-    setStats((prev) =>
-      prev.map((s) => {
-        if (s.id === 'courses') {
-          const current = parseInt(s.value.replace(/,/g, '') || '0', 10);
-          return { ...s, value: (current + 1).toString(), change: '+100%' };
-        }
-        return s;
-      })
-    );
-
-    // Update User Overview chart Courses metric
-    setChartData((prev) =>
-      prev.map((item, index) =>
-        index === prev.length - 1
-          ? { ...item, Courses: (item.Courses || 0) + 1 }
-          : item
-      )
-    );
-
-    // Add Notification (+1 badge)
     setNotifications((prev) => [
       {
         id: Date.now(),
@@ -116,14 +182,28 @@ function App() {
       ...prev,
     ]);
 
-    showToast(`✓ Course "${newCourse.name}" created! Total Courses is now updated.`);
+    showToast(`✓ Course "${newCourse.name}" created! Total Courses updated to ${courses.length + 1}.`);
   };
 
-  // 2. Action: Enroll Student (Increments Total Enrollments & Total Students by +1)
+  // 2. Edit Existing Course
+  const handleUpdateCourse = (updatedCourse) => {
+    setCourses((prev) =>
+      prev.map((c) => (c.id === updatedCourse.id ? updatedCourse : c))
+    );
+    showToast(`✓ Course "${updatedCourse.name}" updated successfully.`);
+  };
+
+  // 3. Delete Course
+  const handleDeleteCourse = (courseId) => {
+    const courseToDelete = courses.find((c) => c.id === courseId);
+    setCourses((prev) => prev.filter((c) => c.id !== courseId));
+    showToast(`✓ Course "${courseToDelete?.name || 'Course'}" deleted. Total Courses is now ${courses.length - 1}.`);
+  };
+
+  // 4. Enroll Student (Live testing)
   const handleAddStudent = (newStudent) => {
     setEnrollments((prev) => [newStudent, ...prev]);
 
-    // Increment Total Students Stat & Total Enrollments Stat
     setStats((prev) =>
       prev.map((s) => {
         if (s.id === 'students') {
@@ -138,25 +218,12 @@ function App() {
       })
     );
 
-    // Update enrolled count for the specific course if it exists
     setCourses((prev) =>
       prev.map((c) =>
-        c.name === newStudent.course
-          ? { ...c, enrolled: (c.enrolled || 0) + 1 }
-          : c
+        c.name === newStudent.course ? { ...c, enrolled: (c.enrolled || 0) + 1 } : c
       )
     );
 
-    // Update User Overview chart Students metric
-    setChartData((prev) =>
-      prev.map((item, index) =>
-        index === prev.length - 1
-          ? { ...item, Students: (item.Students || 0) + 1 }
-          : item
-      )
-    );
-
-    // Add Notification (+1 badge)
     setNotifications((prev) => [
       {
         id: Date.now(),
@@ -168,14 +235,13 @@ function App() {
       ...prev,
     ]);
 
-    showToast(`✓ Student "${newStudent.studentName}" enrolled! Counts incremented.`);
+    showToast(`✓ Student "${newStudent.studentName}" enrolled!`);
   };
 
-  // 3. Action: Add Inquiry from Contact Page (Increments New Inquiries by +1)
+  // 5. Inbound Inquiry
   const handleAddInquiry = (newInquiry) => {
     setMessages((prev) => [newInquiry, ...prev]);
 
-    // Increment Inquiries Stat
     setStats((prev) =>
       prev.map((s) => {
         if (s.id === 'inquiries') {
@@ -186,7 +252,6 @@ function App() {
       })
     );
 
-    // Add Notification (+1 badge)
     setNotifications((prev) => [
       {
         id: Date.now(),
@@ -201,28 +266,31 @@ function App() {
     showToast(`✓ Inquiry received from ${newInquiry.from}!`);
   };
 
-  // 4. Action: Reset All Data to 0 for Clean Testing
+  // 6. Reset All CRM Data to Baseline
   const handleResetAllData = () => {
     try {
-      localStorage.removeItem('edulearn_stats');
-      localStorage.removeItem('edulearn_chart');
       localStorage.removeItem('edulearn_enrollments');
-      localStorage.removeItem('edulearn_courses');
       localStorage.removeItem('edulearn_messages');
       localStorage.removeItem('edulearn_notifications');
     } catch {
-      // Ignore
+      // ignore
     }
-
-    setStats(initialStats);
-    setChartData(userOverviewChartData);
+    setCourses(initial15Courses);
     setEnrollments([]);
-    setCourses([]);
     setMessages([]);
-    setNotifications([]);
-    showToast('✓ All CRM counts and data successfully reset to 0!');
+    setNotifications([
+      {
+        id: Date.now(),
+        title: 'Catalog Reset',
+        message: 'EduLearn catalog restored to original 15 courses. All other counts at 0.',
+        time: 'Just now',
+        unread: true,
+      },
+    ]);
+    showToast('✓ Reset complete: 15 courses loaded, all other metrics set to 0!');
   };
 
+  // 7. Notification Handlers
   const handleMarkNotificationRead = (id) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, unread: false } : n))
@@ -234,58 +302,85 @@ function App() {
     showToast('All notifications marked as read.');
   };
 
+  // 8. Logout
   const handleConfirmLogout = () => {
     setActiveModal(null);
-    showToast('Administrator session closed.');
+    try {
+      localStorage.removeItem('edulearn_auth_user');
+    } catch {
+      // ignore
+    }
+    setCurrentUser(null);
+    showToast('Administrator logged out successfully.');
+    navigate('/login', { replace: true });
   };
 
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    showToast(`Welcome back, ${user.fullName || user.username}!`);
+  };
+
+  // Auth pages (Login & Register) do not render CRM sidebar or navbar
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+  if (isAuthPage) {
+    return (
+      <Routes>
+        <Route path="/login" element={<AdminLogin onLoginSuccess={handleLoginSuccess} />} />
+        <Route path="/register" element={<AdminRegister />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    );
+  }
+
   return (
-    <BrowserRouter>
-      <div className="el-app-container">
-        {/* 1. Exact Left Sidebar matching design */}
-        <Sidebar
-          isMobileOpen={isMobileOpen}
-          onClose={() => setIsMobileOpen(false)}
+    <div className="el-app-container">
+      {/* 1. Exact Left Sidebar matching design from Reference 1 */}
+      <Sidebar
+        isMobileOpen={isMobileOpen}
+        onClose={() => setIsMobileOpen(false)}
+        onLogoutClick={() => setActiveModal('logout')}
+      />
+
+      {/* Mobile Sidebar Backdrop */}
+      {isMobileOpen && (
+        <div
+          className="el-sidebar-backdrop"
+          onClick={() => setIsMobileOpen(false)}
+          aria-label="Close sidebar backdrop"
+        />
+      )}
+
+      {/* 2. Main Content Wrapper */}
+      <div className="el-main-wrapper">
+        {/* Top Navbar */}
+        <Navbar
+          user={currentUser}
+          onToggleSidebar={() => setIsMobileOpen(!isMobileOpen)}
+          searchTerm={searchTerm}
+          onSearchChange={(val) => {
+            setSearchTerm(val);
+            if (val.trim()) {
+              setActiveModal('search');
+            }
+          }}
+          notifications={notifications}
+          onMarkNotificationRead={handleMarkNotificationRead}
+          onClearNotifications={handleClearNotifications}
           onLogoutClick={() => setActiveModal('logout')}
+          onOpenManageUsers={() => setActiveModal('manageUsers')}
+          onResetAllData={handleResetAllData}
         />
 
-        {/* Mobile Sidebar Backdrop */}
-        {isMobileOpen && (
-          <div
-            className="el-sidebar-backdrop"
-            onClick={() => setIsMobileOpen(false)}
-            aria-label="Close sidebar backdrop"
-          />
-        )}
-
-        {/* 2. Main Content Wrapper */}
-        <div className="el-main-wrapper">
-          {/* Top Navbar with Public Enrollment Toggle, Bell Badge & Admin Dropdown */}
-          <Navbar
-            onToggleSidebar={() => setIsMobileOpen(!isMobileOpen)}
-            searchTerm={searchTerm}
-            onSearchChange={(val) => {
-              setSearchTerm(val);
-              if (val.trim()) {
-                setActiveModal('search');
-              }
-            }}
-            notifications={notifications}
-            onMarkNotificationRead={handleMarkNotificationRead}
-            onClearNotifications={handleClearNotifications}
-            onLogoutClick={() => setActiveModal('logout')}
-            onOpenManageUsers={() => setActiveModal('manageUsers')}
-            onResetAllData={handleResetAllData}
-          />
-
-          {/* Router View Pages */}
-          <main>
-            <Routes>
-              {/* Home Dashboard */}
-              <Route
-                path="/"
-                element={
-                  <HomeDashboard
+        {/* Router View Pages with Route Protection */}
+        <main>
+          <Routes>
+            {/* Dashboard (Home) */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Dashboard
                     stats={stats}
                     chartData={chartData}
                     enrollments={enrollments}
@@ -312,123 +407,222 @@ function App() {
                       showToast(`Event: ${e.title} at ${e.location}`)
                     }
                   />
-                }
-              />
-              <Route path="/home" element={<Navigate to="/" replace />} />
-              <Route path="/Home" element={<Navigate to="/" replace />} />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/home" element={<Navigate to="/" replace />} />
+            <Route path="/Home" element={<Navigate to="/" replace />} />
 
-              {/* Courses Page */}
-              <Route
-                path="/courses"
-                element={
-                  <CoursesPage
+            {/* Courses Management */}
+            <Route
+              path="/courses"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Courses
                     courses={courses}
                     onAddCourseClick={() => setActiveModal('addCourse')}
+                    onUpdateCourse={handleUpdateCourse}
+                    onDeleteCourse={handleDeleteCourse}
                     onEnrollClick={(course) => {
                       setEnrollingCourse(course);
                       setActiveModal('addStudent');
                     }}
                   />
-                }
-              />
-              <Route path="/course" element={<Navigate to="/courses" replace />} />
-              <Route path="/Course" element={<Navigate to="/courses" replace />} />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/course" element={<Navigate to="/courses" replace />} />
+            <Route path="/Course" element={<Navigate to="/courses" replace />} />
 
-              {/* Public Student Admissions / Enrollment View */}
-              <Route
-                path="/enroll"
-                element={
-                  <PublicEnrollmentPage
-                    courses={courses}
-                    onEnrollStudent={handleAddStudent}
-                  />
-                }
-              />
+            {/* Public Student Admissions / Enrollment View */}
+            <Route
+              path="/enroll"
+              element={
+                <PublicEnrollment
+                  courses={courses}
+                  onEnrollStudent={handleAddStudent}
+                />
+              }
+            />
 
-              {/* Services Page */}
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/service" element={<Navigate to="/services" replace />} />
-              <Route path="/Service" element={<Navigate to="/services" replace />} />
+            {/* Original Sidebar Pages from Ref 1 */}
+            <Route
+              path="/services"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Services />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/service" element={<Navigate to="/services" replace />} />
+            <Route path="/Service" element={<Navigate to="/services" replace />} />
 
-              {/* Gallery Page */}
-              <Route path="/gallery" element={<GalleryPage />} />
-              <Route path="/Gallery" element={<Navigate to="/gallery" replace />} />
+            <Route
+              path="/gallery"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Gallery />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/Gallery" element={<Navigate to="/gallery" replace />} />
 
-              {/* FAQ Page */}
-              <Route path="/faq" element={<FaqPage />} />
-              <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
+            <Route
+              path="/faq"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Faq />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
 
-              {/* Contact Page */}
-              <Route
-                path="/contact"
-                element={<ContactPage onAddInquiry={handleAddInquiry} />}
-              />
-              <Route path="/Contact" element={<Navigate to="/contact" replace />} />
+            <Route
+              path="/contact"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Contact onAddInquiry={handleAddInquiry} />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/Contact" element={<Navigate to="/contact" replace />} />
 
-              {/* Catch-all */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-        </div>
+            {/* Additional CRM Pages (All initialized to strictly 0 records) */}
+            <Route
+              path="/students"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Students onAddStudentClick={() => setActiveModal('addStudent')} />
+                </ProtectedRoute>
+              }
+            />
 
-        {/* Global Modals */}
-        <AddCourseModal
-          isOpen={activeModal === 'addCourse'}
-          onClose={() => setActiveModal(null)}
-          onAddCourse={handleAddCourse}
-        />
+            <Route
+              path="/enquiries"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Enquiries />
+                </ProtectedRoute>
+              }
+            />
 
-        <AddStudentModal
-          isOpen={activeModal === 'addStudent'}
-          courses={courses}
-          selectedCourse={enrollingCourse}
-          onClose={() => {
-            setActiveModal(null);
-            setEnrollingCourse(null);
-          }}
-          onAddStudent={handleAddStudent}
-        />
+            <Route
+              path="/admissions"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Admissions onAddStudentClick={() => setActiveModal('addStudent')} />
+                </ProtectedRoute>
+              }
+            />
 
-        <ReportsModal
-          isOpen={activeModal === 'reports'}
-          onClose={() => setActiveModal(null)}
-        />
+            <Route
+              path="/staff"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Staff />
+                </ProtectedRoute>
+              }
+            />
 
-        <ManageUsersModal
-          isOpen={activeModal === 'manageUsers'}
-          onClose={() => setActiveModal(null)}
-        />
+            <Route
+              path="/batches"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Batches />
+                </ProtectedRoute>
+              }
+            />
 
-        <LogoutModal
-          isOpen={activeModal === 'logout'}
-          onClose={() => setActiveModal(null)}
-          onConfirm={handleConfirmLogout}
-        />
+            <Route
+              path="/payments"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Payments />
+                </ProtectedRoute>
+              }
+            />
 
-        <SearchResultsModal
-          isOpen={activeModal === 'search' && searchTerm.trim().length > 0}
-          searchTerm={searchTerm}
-          students={enrollments}
-          courses={courses}
-          services={services}
-          onClose={() => {
-            setActiveModal(null);
-            setSearchTerm('');
-          }}
-          onSelectStudent={(s) => {
-            showToast(`Selected student: ${s.studentName}`);
-          }}
-          onSelectCourse={(c) => {
-            showToast(`Selected course: ${c.name}`);
-          }}
-          onSelectService={(srv) => {
-            showToast(`Selected service: ${srv.title}`);
-          }}
-        />
+            <Route
+              path="/certificates"
+              element={
+                <ProtectedRoute user={currentUser}>
+                  <Certificates />
+                </ProtectedRoute>
+              }
+            />
 
-        {/* Action Toast Alert */}
-        {toastMessage && <div className="el-toast">{toastMessage}</div>}
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
       </div>
+
+      {/* Global Modals */}
+      <AddCourseModal
+        isOpen={activeModal === 'addCourse'}
+        onClose={() => setActiveModal(null)}
+        onAddCourse={handleAddCourse}
+      />
+
+      <AddStudentModal
+        isOpen={activeModal === 'addStudent'}
+        courses={courses}
+        selectedCourse={enrollingCourse}
+        onClose={() => {
+          setActiveModal(null);
+          setEnrollingCourse(null);
+        }}
+        onAddStudent={handleAddStudent}
+      />
+
+      <ReportsModal
+        isOpen={activeModal === 'reports'}
+        courseCount={courses.length}
+        onClose={() => setActiveModal(null)}
+      />
+
+      <ManageUsersModal
+        isOpen={activeModal === 'manageUsers'}
+        onClose={() => setActiveModal(null)}
+      />
+
+      <LogoutModal
+        isOpen={activeModal === 'logout'}
+        onClose={() => setActiveModal(null)}
+        onConfirm={handleConfirmLogout}
+      />
+
+      <SearchResultsModal
+        isOpen={activeModal === 'search' && searchTerm.trim().length > 0}
+        searchTerm={searchTerm}
+        students={enrollments}
+        courses={courses}
+        services={services}
+        onClose={() => {
+          setActiveModal(null);
+          setSearchTerm('');
+        }}
+        onSelectStudent={(s) => {
+          showToast(`Selected student: ${s.studentName}`);
+        }}
+        onSelectCourse={(c) => {
+          showToast(`Selected course: ${c.name}`);
+        }}
+        onSelectService={(srv) => {
+          showToast(`Selected service: ${srv.title}`);
+        }}
+      />
+
+      {/* Action Toast Alert */}
+      {toastMessage && <div className="el-toast">{toastMessage}</div>}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
     </BrowserRouter>
   );
 }

@@ -1,4 +1,5 @@
-// EduLearn CRM Initial Mock Data & State (Zero-Initial-State Configured)
+// EduLearn CRM Initial Mock Data & State (Strictly Zero-Initial-State Configured with 15 Initial Courses)
+import { initial15Courses } from './coursesData';
 
 export const initialStats = [
   {
@@ -13,8 +14,8 @@ export const initialStats = [
   {
     id: 'courses',
     title: 'Total Courses',
-    value: '0',
-    change: '+0%',
+    value: '15',
+    change: '+100%',
     type: 'courses',
     color: '#1e88e5',
     bg: '#e8f4fd',
@@ -39,21 +40,40 @@ export const initialStats = [
   },
 ];
 
-// User Overview Chart - Starts strictly at 0
+// User Overview Chart - Students strictly at 0, Courses at 15
 export const userOverviewChartData = [
-  { month: 'Jan', Students: 0, Courses: 0 },
-  { month: 'Feb', Students: 0, Courses: 0 },
-  { month: 'Mar', Students: 0, Courses: 0 },
-  { month: 'Apr', Students: 0, Courses: 0 },
-  { month: 'May', Students: 0, Courses: 0 },
-  { month: 'Jun', Students: 0, Courses: 0 },
+  { month: 'Jan', Students: 0, Courses: 15 },
+  { month: 'Feb', Students: 0, Courses: 15 },
+  { month: 'Mar', Students: 0, Courses: 15 },
+  { month: 'Apr', Students: 0, Courses: 15 },
+  { month: 'May', Students: 0, Courses: 15 },
+  { month: 'Jun', Students: 0, Courses: 15 },
 ];
 
 // Initial zero-state arrays for dynamic live increments
 export const initialEnrollments = [];
 export const initialMessages = [];
-export const initialCourses = [];
-export const initialNotifications = [];
+export const initialCourses = initial15Courses;
+export const initialNotifications = [
+  {
+    id: 1,
+    title: 'System Initialized',
+    message: 'EduLearn CRM initialized with 15 official technology courses',
+    time: 'Just now',
+    unread: true,
+  },
+];
+
+export const initialUsers = [
+  {
+    id: 1,
+    name: 'System Administrator',
+    email: 'admin@edulearn.edu',
+    role: 'Super Admin',
+    status: 'Active',
+    lastLogin: 'Active now',
+  },
+];
 
 export const initialEvents = [
   {
@@ -64,7 +84,7 @@ export const initialEvents = [
     time: '10:00 AM – 12:00 PM',
     location: 'Main Hall',
     speaker: 'Dr. S. Rajan, Industry Expert',
-    attendees: 180,
+    attendees: 0,
   },
   {
     id: 2,
@@ -74,7 +94,7 @@ export const initialEvents = [
     time: '02:00 PM – 04:30 PM',
     location: 'Lab 3, IT Block',
     speaker: 'Prof. Anitha M.',
-    attendees: 95,
+    attendees: 0,
   },
   {
     id: 3,
@@ -84,7 +104,7 @@ export const initialEvents = [
     time: '09:00 AM – 05:00 PM',
     location: 'Auditorium',
     speaker: 'Top 15 IT & Core Recruiters',
-    attendees: 420,
+    attendees: 0,
   },
 ];
 
@@ -148,130 +168,167 @@ export const initialServices = [
 export const initialGallery = [
   {
     id: 1,
-    title: 'Annual Graduation Convocation 2026',
-    category: 'Events',
-    tag: 'Academic',
-    date: 'Oct 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&auto=format&fit=crop&q=80',
-    description: 'Proud graduates celebrating the commencement ceremony in the main university amphitheater.',
+    category: 'Campus',
+    tag: 'Academic Quadrangle',
+    date: '15 Nov 2026',
+    title: 'Main Academic Campus & Quadrangle',
+    description: 'State-of-the-art infrastructure designed for modern tech learning and collaborative student study.',
+    subtitle: 'State-of-the-art infrastructure designed for modern tech learning',
+    imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 2,
-    title: 'Modern High-Tech Computer Lab',
     category: 'Campus',
-    tag: 'Infrastructure',
-    date: 'Sep 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=800&auto=format&fit=crop&q=80',
-    description: 'Students working on high-performance development machines in the AI & Data Science lab.',
+    tag: 'Cloud & AI Lab',
+    date: '18 Nov 2026',
+    title: 'High-Performance Cloud & AI Lab',
+    description: 'Dedicated workstations equipped with Linux, high-end GPUs, and fast gigabit development networks.',
+    subtitle: 'Dedicated workstations equipped with Linux, GPUs, and fast gigabit network',
+    imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 3,
-    title: 'Central University Library & Reading Hall',
     category: 'Campus',
-    tag: 'Library',
-    date: 'Aug 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&auto=format&fit=crop&q=80',
-    description: 'Quiet, sunlit study zones with extensive academic research archives and reading desks.',
+    tag: 'Digital Archive',
+    date: '10 Nov 2026',
+    title: 'Central Digital Research Library',
+    description: 'Quiet study zones, IEEE and Springer e-journals, collaborative discussion pods, and reference archives.',
+    subtitle: 'Quiet zones, e-journals, collaborative study pods, and reference archives',
+    imageUrl: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 4,
-    title: 'National Tech Hackathon Winners',
-    category: 'Competitions',
-    tag: 'Achievements',
-    date: 'Jul 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=80',
-    description: 'EduLearn student team bagging first prize at the Smart City Innovation Hackathon.',
+    category: 'Events',
+    tag: 'Grand Auditorium',
+    date: '22 Nov 2026',
+    title: 'Grand Convention Auditorium & Tech Summit',
+    description: 'Seating capacity of 1,200 for international tech summits, hackathons, and corporate guest lectures.',
+    subtitle: 'Seating capacity of 1,200 for tech summits, hackathons, and guest lectures',
+    imageUrl: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 5,
-    title: 'International Career & Higher Studies Expo',
-    category: 'Seminars',
-    tag: 'Events',
-    date: 'Jun 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1544531585-9847b68c8c86?w=800&auto=format&fit=crop&q=80',
-    description: 'Over 40 international universities and recruiting companies interacting with aspiring students.',
+    category: 'Competitions',
+    tag: '24-Hour Sprint',
+    date: '12 Nov 2026',
+    title: 'Annual 24-Hour Code Hackathon Arena',
+    description: 'Students building cutting-edge full-stack web applications, AI models, and real-time cloud microservices.',
+    subtitle: 'Students building cutting-edge full-stack and AI software solutions',
+    imageUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 6,
-    title: 'Cultural Festival & Talent Showcase',
+    category: 'Campus',
+    tag: 'Smart Classrooms',
+    date: '08 Nov 2026',
+    title: 'Smart Interactive Audio-Visual Classrooms',
+    description: 'Equipped with digital podiums, hybrid conferencing cameras, and interactive touch learning screens.',
+    subtitle: 'Equipped with digital podiums, hybrid conferencing, and interactive screens',
+    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 7,
+    category: 'Seminars',
+    tag: 'Industry Talk',
+    date: '19 Nov 2026',
+    title: 'Career & Cloud Architecture Tech Seminar',
+    description: 'Senior engineers and cloud architects delivering keynote presentations on scalable backend microservices.',
+    subtitle: 'Keynotes on scalable backend microservices and engineering career paths',
+    imageUrl: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 8,
+    category: 'Events',
+    tag: 'Convocation',
+    date: '05 Nov 2026',
+    title: 'Annual Graduation & Certificate Convocation',
+    description: 'Proud graduates celebrating successful completion of professional tech and diploma engineering courses.',
+    subtitle: 'Graduates celebrating course completion and certification awards',
+    imageUrl: 'https://images.unsplash.com/photo-1627556704290-2b1f5853ff78?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1627556704290-2b1f5853ff78?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 9,
+    category: 'Competitions',
+    tag: 'Robotics Challenge',
+    date: '14 Nov 2026',
+    title: 'Robotics & Embedded Systems Innovation Fair',
+    description: 'Student engineering teams showcasing IoT hardware prototypes, drones, and autonomous robotics.',
+    subtitle: 'Student teams showcasing IoT hardware prototypes and autonomous robotics',
+    imageUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 10,
     category: 'Cultural',
-    tag: 'Student Life',
-    date: 'May 2026',
-    imageUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop&q=80',
-    description: 'Vibrant musical performances and theatre showcase during the annual inter-college fest.',
+    tag: 'Student Festival',
+    date: '20 Nov 2026',
+    title: 'Annual Youth & Cultural Fest Celebrations',
+    description: 'Music, theater, dance performances, and creative exhibitions by students celebrating campus life.',
+    subtitle: 'Music, dance performances, and creative exhibitions by students',
+    imageUrl: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 11,
+    category: 'Seminars',
+    tag: 'Code Lab',
+    date: '16 Nov 2026',
+    title: 'Interactive Frontend & React Code Lab',
+    description: 'Hands-on coding sprint where developers build modern Single Page Applications with live peer reviews.',
+    subtitle: 'Hands-on coding sprint building modern Single Page Applications',
+    imageUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 12,
+    category: 'Cultural',
+    tag: 'Design Studio',
+    date: '02 Nov 2026',
+    title: 'UI/UX Visual Arts & Figma Design Expo',
+    description: 'Showcasing product design prototypes, mobile UI wireframes, and digital brand identities.',
+    subtitle: 'Showcasing product design prototypes and mobile UI wireframes',
+    imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80',
   },
 ];
 
 export const initialFaqs = [
   {
     id: 1,
-    question: 'How do I add a new student enrollment into the EduLearn CRM?',
-    answer: 'You can quickly register a new student by clicking the "Add Student" button in the Quick Actions section on the dashboard, or by navigating to the Enrollments page and entering student details.',
-    category: 'Enrollment',
+    question: 'How do I apply for admission to a course?',
+    answer: 'You can apply online via the "Public Enrollment View" button on the top navbar, or visit the Courses page and click "Enroll". Our admissions team will review your application within 24 hours.',
+    category: 'Admissions',
   },
   {
     id: 2,
-    question: 'How do I update course offerings and syllabus details?',
-    answer: 'Go to the Courses section from the sidebar menu. Click on any course to edit its details, seat capacities, course fees, or click "Add Course" to create a new syllabus curriculum.',
-    category: 'Courses',
+    question: 'Are the 15 courses certified and industry-recognized?',
+    answer: 'Yes, all 15 curriculum tracks are aligned with international tech industry standards and include hands-on capstone projects, portfolio verification, and verifiable certificates.',
+    category: 'Curriculum',
   },
   {
     id: 3,
-    question: 'What do the enrollment status badges "Confirmed" and "Pending" represent?',
-    answer: '"Confirmed" indicates that all required documents and admission fees have been cleared. "Pending" denotes that verification of documents or tuition installment clearance is currently in progress.',
-    category: 'Status',
+    question: 'What are the system and prerequisite requirements?',
+    answer: 'Most courses require only a modern laptop with at least 8GB RAM and an internet connection. Prerequisites vary by course—refer to the Course Details view for specific eligibility.',
+    category: 'Requirements',
   },
   {
     id: 4,
-    question: 'Can I export student reports and enrollment statistics?',
-    answer: 'Yes! Click "View Reports" in the Quick Actions section or visit the Reports page to download detailed PDF and Excel summaries of registrations, attendance, and fee collections.',
-    category: 'Reports',
+    question: 'Is placement assistance provided after graduation?',
+    answer: 'Yes! Our Career & Placement Cell organizes resume building, mock interviews, and campus recruitment drives with over 150 corporate hiring partners.',
+    category: 'Placements',
   },
   {
     id: 5,
-    question: 'How are incoming student messages and inquiries routed?',
-    answer: 'Messages submitted via web portals or phone inquiries arrive directly into the "Recent Messages" inbox. Admins can click on any inquiry to respond, tag status, or assign to an academic counselor.',
-    category: 'Communication',
-  },
-  {
-    id: 6,
-    question: 'How can I schedule a new campus event or seminar?',
-    answer: 'Visit the Upcoming Events section and click "Add Event" to input the date, time, venue, speaker profile, and targeted student cohort.',
-    category: 'Events',
-  },
-];
-
-export const initialUsers = [
-  {
-    id: 1,
-    name: 'Admin User',
-    email: 'admin@edulearn.edu',
-    role: 'Super Admin',
-    status: 'Active',
-    lastLogin: 'Just now',
-  },
-  {
-    id: 2,
-    name: 'Dr. R. Ramanathan',
-    email: 'ramanathan@edulearn.edu',
-    role: 'Instructor',
-    status: 'Active',
-    lastLogin: '2 hours ago',
-  },
-  {
-    id: 3,
-    name: 'Prof. Lakshmi Priya',
-    email: 'lakshmi@edulearn.edu',
-    role: 'Instructor',
-    status: 'Active',
-    lastLogin: 'Yesterday',
-  },
-  {
-    id: 4,
-    name: 'Counselor Priya Nair',
-    email: 'priya.nair@edulearn.edu',
-    role: 'Academic Advisor',
-    status: 'Active',
-    lastLogin: '3 days ago',
+    question: 'Can I pay the course fee in monthly installments?',
+    answer: 'Yes, zero-interest EMI and flexible installment options are available for all accredited diploma and bootcamp programs.',
+    category: 'Fees',
   },
 ];

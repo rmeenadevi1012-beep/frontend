@@ -15,6 +15,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function Navbar({
+  user,
   onToggleSidebar,
   searchTerm,
   onSearchChange,
@@ -188,8 +189,10 @@ function Navbar({
             className="el-admin-profile"
             onClick={() => setShowAdminDropdown(!showAdminDropdown)}
           >
-            <div className="el-admin-avatar">A</div>
-            <span className="el-admin-name">Admin</span>
+            <div className="el-admin-avatar">
+              {user?.fullName ? user.fullName[0].toUpperCase() : 'A'}
+            </div>
+            <span className="el-admin-name">{user?.username || 'Admin'}</span>
             <ChevronDown size={14} className="el-admin-chevron" strokeWidth={2.5} />
           </div>
 
@@ -204,13 +207,13 @@ function Navbar({
                 }}
               >
                 <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e202e' }}>
-                  Administrator
+                  {user?.fullName || 'Administrator'}
                 </div>
                 <div style={{ fontSize: '12px', color: '#6e34e2', fontWeight: 600 }}>
-                  Super Admin
+                  {user?.role || 'Super Admin'}
                 </div>
                 <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
-                  admin@edulearn.edu
+                  {user?.email || 'admin@edulearn.edu'}
                 </div>
               </div>
 
