@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { authAPI } from '../services/api';
 import {
   GraduationCap,
   User,
@@ -39,8 +40,28 @@ function AdminLogin({ onLoginSuccess }) {
 
     setIsLoading(true);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       const cleanIdent = identifier.trim().toLowerCase();
+
+      try {
+        const res = await authAPI.login({
+          email: cleanIdent,
+          username: cleanIdent,
+          password,
+        });
+        if (res && res.token) {
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('edulearn_token', res.token);
+          const adminUser = res.admin || res.user || { username: cleanIdent, email: cleanIdent };
+          localStorage.setItem('edulearn_auth_user', JSON.stringify(adminUser));
+          setSuccess('Authentication successful! Welcome to EduLearn CRM.');
+          if (onLoginSuccess) onLoginSuccess(adminUser);
+          setTimeout(() => navigate('/', { replace: true }), 800);
+          return;
+        }
+      } catch {
+        // Fallback to local credentials if backend is offline or not seeded
+      }
 
       // 1. Check Default Super Admin Credentials
       let matchedAdmin = null;

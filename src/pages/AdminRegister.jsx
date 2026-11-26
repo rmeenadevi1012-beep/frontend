@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { authAPI } from '../services/api';
 import {
   GraduationCap,
   User,
@@ -46,7 +47,7 @@ function AdminRegister() {
     return /^[0-9+() -]{7,16}$/.test(phone);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -96,7 +97,30 @@ function AdminRegister() {
     setIsSubmitting(true);
 
     try {
-      // Check if user already exists
+      await authAPI.register({
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim().toLowerCase(),
+        phone: formData.phone.trim(),
+        username: formData.username.trim(),
+        password: formData.password,
+        role: formData.role,
+      });
+
+      setSuccess('Admin account registered successfully! Redirecting to login...');
+      setTimeout(() => {
+        navigate('/login', { state: { registeredUsername: formData.username } });
+      }, 1800);
+      return;
+    } catch (apiErr) {
+      if (apiErr?.status && apiErr.status < 500) {
+        setError(apiErr.message || 'Registration failed.');
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    try {
+      // Fallback: Check if user already exists in localStorage
       const existingAdmins = JSON.parse(localStorage.getItem('edulearn_registered_admins') || '[]');
       const emailExists = existingAdmins.some(
         (a) => a.email.toLowerCase() === formData.email.toLowerCase()
