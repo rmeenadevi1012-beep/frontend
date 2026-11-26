@@ -1,7 +1,6 @@
-import React from 'react';
 import { Users, BookOpen, TrendingUp, Mail } from 'lucide-react';
 
-function StatCards({ stats }) {
+function StatCards({ stats = [] }) {
   // Map icons based on stat id/type
   const getIcon = (type) => {
     switch (type) {
@@ -37,7 +36,7 @@ function StatCards({ stats }) {
 
           <div className="el-stat-trend">
             <span>↑</span>
-            <span>{stat.change.replace('+', '')}</span>
+            <span>{(stat.change || '').replace('+', '')}</span>
           </div>
         </div>
       ))}

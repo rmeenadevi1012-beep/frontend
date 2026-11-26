@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GraduationCap, ArrowLeft, CheckCircle2, BookOpen, Send, Sparkles } from 'lucide-react';
+import { GraduationCap, ArrowLeft, CheckCircle2, Send, Sparkles } from 'lucide-react';
 
 function PublicEnrollmentPage({ courses = [], onEnrollStudent }) {
   const navigate = useNavigate();

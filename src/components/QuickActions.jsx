@@ -1,4 +1,3 @@
-~import React from 'react';
 import { Zap, BookPlus, UserPlus, BarChart2, Settings } from 'lucide-react';
 
 function QuickActions({

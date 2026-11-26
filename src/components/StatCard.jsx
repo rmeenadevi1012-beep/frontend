@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function StatCard({ title, value, change, changeType = 'positive', icon: Icon, iconBg = '#f3e8ff', iconColor = '#7c3aed' }) {
   return (
     <div className="crm-stat-card">

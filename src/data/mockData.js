@@ -1,5 +1,4 @@
 // EduLearn CRM Initial Mock Data & State (Strictly Zero-Initial-State Configured with 15 Initial Courses)
-import { initial15Courses } from './coursesData';
 
 export const initialStats = [
   {
@@ -15,11 +14,6 @@ export const initialStats = [
     id: 'courses',
     title: 'Total Courses',
     value: '15',
-<<<<<<< HEAD
-    change: '+0%',
-=======
-    change: '+100%',
->>>>>>> 43fe63ed57b74819d8462964507dc5759d388f46
     type: 'courses',
     color: '#1e88e5',
     bg: '#e8f4fd',
@@ -57,38 +51,6 @@ export const userOverviewChartData = [
 // Initial zero-state arrays for dynamic live increments
 export const initialEnrollments = [];
 export const initialMessages = [];
-<<<<<<< HEAD
-export const initialCourses = [
-  {
-    id:1,
-    title:'python programming',
-    
-  }
-];
-export const initialNotifications = [];
-=======
-export const initialCourses = initial15Courses;
-export const initialNotifications = [
-  {
-    id: 1,
-    title: 'System Initialized',
-    message: 'EduLearn CRM initialized with 15 official technology courses',
-    time: 'Just now',
-    unread: true,
-  },
-];
-
-export const initialUsers = [
-  {
-    id: 1,
-    name: 'System Administrator',
-    email: 'admin@edulearn.edu',
-    role: 'Super Admin',
-    status: 'Active',
-    lastLogin: 'Active now',
-  },
-];
->>>>>>> 43fe63ed57b74819d8462964507dc5759d388f46
 
 export const initialEvents = [
   {

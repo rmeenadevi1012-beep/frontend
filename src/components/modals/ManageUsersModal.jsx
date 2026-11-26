@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Users, UserCheck, Shield, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { X, Users, Plus } from 'lucide-react';
 import { initialUsers } from '../../data/mockData';
 
 function ManageUsersModal({ isOpen, onClose }) {

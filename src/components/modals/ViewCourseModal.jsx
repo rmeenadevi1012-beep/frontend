@@ -1,5 +1,4 @@
-import React from 'react';
-import { X, BookOpen, Clock, Tag, Award, CheckCircle, Briefcase, DollarSign, Users } from 'lucide-react';
+import { X, BookOpen, Clock, Tag, Award, CheckCircle, Users } from 'lucide-react';
 
 function ViewCourseModal({ course, isOpen, onClose }) {
   if (!isOpen || !course) return null;

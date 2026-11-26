@@ -1,4 +1,3 @@
-import React from 'react';
 import WelcomeBanner from '../WelcomeBanner';
 import StatCards from '../StatCards';
 import UserOverviewChart from '../UserOverviewChart';

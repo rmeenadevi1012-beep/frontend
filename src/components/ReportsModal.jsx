@@ -1,4 +1,3 @@
-import React from 'react';
 import { BarChart2, X, Users, BookOpen, GraduationCap, Mail, Image as ImageIcon, Award, CheckCircle } from 'lucide-react';
 
 export default function ReportsModal({

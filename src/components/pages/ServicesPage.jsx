@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   GraduationCap,
   Briefcase,
@@ -7,13 +7,11 @@ import {
   Award,
   Home,
   Headphones,
-  CheckCircle,
-  Plus,
 } from 'lucide-react';
 import { initialServices } from '../../data/mockData';
 
 function ServicesPage() {
-  const [services, setServices] = useState(initialServices);
+  const [services] = useState(initialServices);
   const [requestedId, setRequestedId] = useState(null);
 
   const getServiceIcon = (iconName) => {

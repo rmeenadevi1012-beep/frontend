@@ -1,4 +1,3 @@
-import React from 'react';
 import { LogOut, AlertTriangle, X } from 'lucide-react';
 
 function LogoutModal({ isOpen, onClose, onConfirm }) {

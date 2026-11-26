@@ -1,4 +1,3 @@
-import React from 'react';
 import { AlertTriangle, Trash2, X } from 'lucide-react';
 
 function DeleteCourseModal({ course, isOpen, onClose, onConfirmDelete }) {

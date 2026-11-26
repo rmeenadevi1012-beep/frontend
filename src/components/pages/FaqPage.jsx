@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { initialFaqs } from '../../data/mockData';
 import { ChevronDown, ChevronUp, HelpCircle, Search } from 'lucide-react';
 
 function FaqPage() {
-  const [faqs, setFaqs] = useState(initialFaqs);
+  const [faqs] = useState(initialFaqs);
   const [openId, setOpenId] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
 

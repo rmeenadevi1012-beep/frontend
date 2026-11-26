@@ -1,29 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, UserPlus } from 'lucide-react';
 
 function AddStudentModal({ isOpen, onClose, onAddStudent, courses, selectedCourse }) {
+  const defaultCourse = selectedCourse
+    ? selectedCourse.name
+    : (courses && courses.length > 0 ? courses[0].name : 'B.Sc Computer Science');
+  const today = new Date().toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+
   const [formData, setFormData] = useState({
     studentName: '',
-    course: 'B.Sc Computer Science',
-    enrollmentDate: '',
+    course: defaultCourse,
+    enrollmentDate: today,
     status: 'Confirmed',
     email: '',
     phone: '',
   });
-
-  useEffect(() => {
-    const today = new Date().toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    });
-
-    setFormData((prev) => ({
-      ...prev,
-      course: selectedCourse ? selectedCourse.name : (courses && courses.length > 0 ? courses[0].name : 'B.Sc Computer Science'),
-      enrollmentDate: today,
-    }));
-  }, [isOpen, selectedCourse, courses]);
 
   if (!isOpen) return null;
 

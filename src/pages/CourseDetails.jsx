@@ -1,12 +1,9 @@
-import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   Clock,
   GraduationCap,
-  Award,
   CheckCircle2,
-  Calendar,
   Layers,
   Sparkles,
   BookOpen,

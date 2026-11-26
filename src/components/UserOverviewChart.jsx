@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -8,7 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
-import { BarChart2, ArrowRight } from 'lucide-react';
+import { BarChart2 } from 'lucide-react';
 
 // Custom Tooltip component
 const CustomTooltip = ({ active, payload, label }) => {

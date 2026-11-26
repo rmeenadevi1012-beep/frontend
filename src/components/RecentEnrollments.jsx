@@ -1,4 +1,3 @@
-import React from 'react';
 import { GraduationCap, UserCheck } from 'lucide-react';
 
 function RecentEnrollments({ enrollments, onViewAll, onSelectStudent, onAddStudentClick }) {

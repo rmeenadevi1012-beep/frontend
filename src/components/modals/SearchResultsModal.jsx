@@ -1,4 +1,3 @@
-import React from 'react';
 import { Search, X, User, BookOpen, Settings } from 'lucide-react';
 
 function SearchResultsModal({

@@ -1,5 +1,4 @@
-import React from 'react';
-import { X, BarChart2, BookOpen, Users, HelpCircle, UserCheck, Calendar, DollarSign, Award, Layers } from 'lucide-react';
+import { X, BarChart2, BookOpen, Users, HelpCircle, UserCheck, DollarSign, Award, Layers } from 'lucide-react';
 
 function ReportsModal({ isOpen, onClose, courseCount = 15 }) {
   if (!isOpen) return null;

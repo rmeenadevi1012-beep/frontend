@@ -1,4 +1,3 @@
-import React from 'react';
 import { MessageSquare, Mail } from 'lucide-react';
 
 function RecentMessages({ messages, onViewAll, onSelectMessage }) {

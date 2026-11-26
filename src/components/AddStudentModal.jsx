@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { UserPlus, X, AlertCircle } from 'lucide-react';
 
 export default function AddStudentModal({

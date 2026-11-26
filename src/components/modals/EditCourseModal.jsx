@@ -1,34 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, Edit, Save } from 'lucide-react';
 
 function EditCourseModal({ course, isOpen, onClose, onUpdateCourse }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    code: '',
-    category: '',
-    duration: '',
-    status: 'Active',
-    description: '',
-    shortDescription: '',
-    fee: '$1,200',
-    seats: 40,
-  });
-
-  useEffect(() => {
-    if (course) {
-      setFormData({
-        name: course.name || '',
-        code: course.code || '',
-        category: course.category || course.department || 'Programming & Development',
-        duration: course.duration || '',
-        status: course.status || 'Active',
-        description: course.description || '',
-        shortDescription: course.shortDescription || '',
-        fee: course.fee || '$1,200',
-        seats: course.seats || 40,
-      });
-    }
-  }, [course]);
+  const [formData, setFormData] = useState(() => ({
+    name: course?.name || '',
+    code: course?.code || '',
+    category: course?.category || course?.department || 'Programming & Development',
+    duration: course?.duration || '',
+    status: course?.status || 'Active',
+    description: course?.description || '',
+    shortDescription: course?.shortDescription || '',
+    fee: course?.fee || '$1,200',
+    seats: course?.seats || 40,
+  }));
 
   if (!isOpen || !course) return null;
 

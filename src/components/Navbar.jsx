@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Menu,
@@ -9,18 +9,11 @@ import {
   ShieldCheck,
   RotateCcw,
   LogOut,
-  CheckCircle,
-  ExternalLink
+  CheckCircle
 } from 'lucide-react';
 
-<<<<<<< HEAD
 export default function Navbar({
   onToggleMobileSidebar,
-=======
-function Navbar({
-  user,
-  onToggleSidebar,
->>>>>>> 43fe63ed57b74819d8462964507dc5759d388f46
   searchTerm,
   onSearchChange,
   notifications = [],
@@ -155,47 +148,15 @@ function Navbar({
             onClick={() => setShowAdminMenu(!showAdminMenu)}
             aria-label="Admin profile options"
           >
-<<<<<<< HEAD
-            <div className="crm-avatar-circle">A</div>
-            <span className="crm-profile-name">Admin</span>
-            <ChevronDown size={16} className="crm-chevron-icon" />
+            <User size={18} />
+            <ChevronDown size={14} />
           </button>
 
           {showAdminMenu && (
-            <div className="crm-dropdown-panel crm-admin-dropdown">
-              <div className="crm-admin-card-header">
-                <div className="crm-avatar-circle large">A</div>
-                <div className="crm-admin-meta">
-                  <h5 className="crm-admin-fullname">System Administrator</h5>
-                  <span className="crm-admin-role">Little Champs Kids School</span>
-                  <span className="crm-admin-email">admin@littlechamps.edu</span>
-=======
-            <div className="el-admin-avatar">
-              {user?.fullName ? user.fullName[0].toUpperCase() : 'A'}
-            </div>
-            <span className="el-admin-name">{user?.username || 'Admin'}</span>
-            <ChevronDown size={14} className="el-admin-chevron" strokeWidth={2.5} />
-          </div>
-
-          {/* Admin Profile Dropdown */}
-          {showAdminDropdown && (
-            <div className="el-dropdown-panel" style={{ width: '230px' }}>
-              <div
-                style={{
-                  padding: '14px 18px',
-                  borderBottom: '1px solid var(--el-border-light)',
-                  background: '#fcfaff',
-                }}
-              >
-                <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e202e' }}>
-                  {user?.fullName || 'Administrator'}
-                </div>
-                <div style={{ fontSize: '12px', color: '#6e34e2', fontWeight: 600 }}>
-                  {user?.role || 'Super Admin'}
-                </div>
-                <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
-                  {user?.email || 'admin@edulearn.edu'}
->>>>>>> 43fe63ed57b74819d8462964507dc5759d388f46
+            <div className="crm-dropdown-menu crm-admin-dropdown">
+              <div className="crm-admin-header">
+                <div>
+                  <div className="fw-semibold">Admin</div>
                 </div>
               </div>
 

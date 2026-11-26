@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { initialGallery } from '../../data/mockData';
 import {
   Image as GalleryIcon,
@@ -7,10 +7,7 @@ import {
   Plus,
   Trash2,
   Upload,
-  Calendar,
-  Tag,
-  CheckCircle2,
-  FileImage
+  CheckCircle2
 } from 'lucide-react';
 
 function GalleryPage() {

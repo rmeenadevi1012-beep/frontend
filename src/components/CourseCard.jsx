@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, GraduationCap, Edit2, Trash2, ArrowRight } from 'lucide-react';
 
