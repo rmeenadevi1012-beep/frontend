@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import {
   Image as ImageIcon,
@@ -277,3 +278,7 @@ export default function Gallery({ galleryUploads, onAddUpload, onDeleteUpload })
     </div>
   );
 }
+=======
+import GalleryPage from '../components/pages/GalleryPage';
+export default GalleryPage;
+>>>>>>> 43fe63ed57b74819d8462964507dc5759d388f46

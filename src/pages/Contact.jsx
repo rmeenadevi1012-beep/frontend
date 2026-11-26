@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import {
   Mail,
@@ -304,3 +305,7 @@ export default function Contact({
     </div>
   );
 }
+=======
+import ContactPage from '../components/pages/ContactPage';
+export default ContactPage;
+>>>>>>> 43fe63ed57b74819d8462964507dc5759d388f46

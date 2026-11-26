@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
 import {
   Users,
@@ -546,3 +547,12 @@ export default function Dashboard({
     </div>
   );
 }
+=======
+import HomeDashboard from '../components/pages/HomeDashboard';
+
+function Dashboard(props) {
+  return <HomeDashboard {...props} />;
+}
+
+export default Dashboard;
+>>>>>>> 43fe63ed57b74819d8462964507dc5759d388f46

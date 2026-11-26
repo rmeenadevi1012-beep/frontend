@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { BookOpen, Plus, Search, Filter, Users, Clock, Award, UserPlus } from 'lucide-react';
 
@@ -220,3 +221,7 @@ function CoursesPage({ courses = [], onAddCourseClick, onEnrollClick }) {
 }
 
 export default CoursesPage;
+=======
+import Courses from '../../pages/Courses';
+export default Courses;
+>>>>>>> 43fe63ed57b74819d8462964507dc5759d388f46

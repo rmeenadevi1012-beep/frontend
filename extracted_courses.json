@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "slug": "python-programming",
+    "name": "Python Full Stack Programming",
+    "category": "Programming & Development",
+    "duration": "4 Months (Hands-on Labs)",
+    "eligibility": "Any degree / Diploma / Beginners with basic computer knowledge",
+    "icon": "bi-filetype-py",
+    "image": "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 2,
+    "slug": "javascript-web-development",
+    "name": "JavaScript & Modern Web Development",
+    "category": "Web Development",
+    "duration": "3 Months (Project-Driven)",
+    "eligibility": "Students, Graduates, or Aspiring Web Developers",
+    "icon": "bi-filetype-js",
+    "image": "https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 3,
+    "slug": "react-js-frontend",
+    "name": "React JS & Frontend Engineering",
+    "category": "Frontend Development",
+    "duration": "3.5 Months (Practical Boot-Camp)",
+    "eligibility": "Prior basic knowledge of HTML, CSS, and basic JavaScript",
+    "icon": "bi-code-square",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 4,
+    "slug": "full-stack-web-development",
+    "name": "Full Stack Web Development (MERN)",
+    "category": "Full Stack Development",
+    "duration": "6 Months (Comprehensive Masterclass)",
+    "eligibility": "Graduates, College Students, or Career Switchers",
+    "icon": "bi-layers-fill",
+    "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 5,
+    "slug": "java-full-stack",
+    "name": "Java Full Stack Development",
+    "category": "Enterprise Software",
+    "duration": "6 Months (Enterprise Standard)",
+    "eligibility": "Any degree with interest in programming and software development",
+    "icon": "bi-cup-hot-fill",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 6,
+    "slug": "data-science-machine-learning",
+    "name": "Data Science & Machine Learning",
+    "category": "Data & AI",
+    "duration": "5 Months (Analytical Bootcamp)",
+    "eligibility": "Degree in Science, Math, Engineering, Commerce or IT",
+    "icon": "bi-graph-up-arrow",
+    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 7,
+    "slug": "artificial-intelligence-deep-learning",
+    "name": "Artificial Intelligence & Generative AI",
+    "category": "Data & AI",
+    "duration": "4.5 Months (Advanced Track)",
+    "eligibility": "Basic programming background in Python and fundamentals of math",
+    "icon": "bi-cpu-fill",
+    "image": "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 8,
+    "slug": "ui-ux-design-figma",
+    "name": "UI / UX Design & Figma Masterclass",
+    "category": "Design & Creative",
+    "duration": "3 Months (Creative Studio)",
+    "eligibility": "Open to all creative thinkers, no coding required",
+    "icon": "bi-palette-fill",
+    "image": "https://images.unsplash.com/photo-1581291518655-9523b932edcf?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 9,
+    "slug": "nodejs-backend-architecture",
+    "name": "Node.js & Backend Architecture",
+    "category": "Backend Development",
+    "duration": "3 Months (Intensive API Labs)",
+    "eligibility": "Good understanding of JavaScript syntax and functions",
+    "icon": "bi-hdd-network-fill",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 10,
+    "slug": "cloud-computing-aws",
+    "name": "Cloud Computing & AWS Solutions",
+    "category": "Cloud & Infrastructure",
+    "duration": "3.5 Months (Cloud Architect Track)",
+    "eligibility": "Basic understanding of networking, Linux, and web systems",
+    "icon": "bi-cloud-check-fill",
+    "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 11,
+    "slug": "cyber-security-ethical-hacking",
+    "name": "Cyber Security & Ethical Hacking",
+    "category": "Security & Networking",
+    "duration": "4 Months (Hands-on Cyber Lab)",
+    "eligibility": "Any graduate with interest in networking and digital defense",
+    "icon": "bi-shield-lock-fill",
+    "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 12,
+    "slug": "mobile-app-development",
+    "name": "Mobile App Development (Flutter & React Native)",
+    "category": "Mobile Apps",
+    "duration": "4 Months (Cross-Platform Labs)",
+    "eligibility": "Basic knowledge of any programming language (JavaScript or Dart)",
+    "icon": "bi-phone-fill",
+    "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 13,
+    "slug": "devops-engineering",
+    "name": "DevOps & CI/CD Cloud Automation",
+    "category": "Cloud & Infrastructure",
+    "duration": "4 Months (DevOps Engineering)",
+    "eligibility": "Familiarity with Linux and basic software development workflow",
+    "icon": "bi-gear-wide-connected",
+    "image": "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 14,
+    "slug": "sql-database-management",
+    "name": "SQL & Modern Database Management",
+    "category": "Database Engineering",
+    "duration": "2.5 Months (Data Architecture)",
+    "eligibility": "Open to anyone who wants to work with structured enterprise data",
+    "icon": "bi-database-fill-gear",
+    "image": "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  },
+  {
+    "id": 15,
+    "slug": "cpp-data-structures-algorithms",
+    "name": "C++ & Data Structures & Algorithms (DSA)",
+    "category": "Core Computer Science",
+    "duration": "4 Months (Coding Interview Prep)",
+    "eligibility": "College students preparing for tech campus placements and product interviews",
+    "icon": "bi-braces",
+    "image": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80",
+    "overview": ""
+  }
+]

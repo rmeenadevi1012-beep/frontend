@@ -58,12 +58,10 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 function UserOverviewChart({ data, onViewAll }) {
-  // Format Y-axis ticks to match screenshot: 0, 500, 1K, 1.5K
+  // Format Y-axis ticks dynamically
   const formatYAxis = (tickItem) => {
     if (tickItem === 0) return '0';
-    if (tickItem === 500) return '500';
-    if (tickItem === 1000) return '1K';
-    if (tickItem === 1500) return '1.5K';
+    if (tickItem >= 1000) return `${(tickItem / 1000).toFixed(0)}K`;
     return `${tickItem}`;
   };
 
@@ -120,8 +118,7 @@ function UserOverviewChart({ data, onViewAll }) {
               dy={10}
             />
             <YAxis
-              domain={[0, 1500]}
-              ticks={[0, 500, 1000, 1500]}
+              domain={[0, (dataMax) => Math.max(20, Math.ceil(dataMax * 1.2))]}
               tickFormatter={formatYAxis}
               axisLine={false}
               tickLine={false}
