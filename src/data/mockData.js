@@ -13,7 +13,7 @@ export const initialStats = [
   {
     id: 'courses',
     title: 'Total Courses',
-    value: '0',
+    value: '15',
     change: '+0%',
     type: 'courses',
     color: '#1e88e5',
@@ -52,7 +52,13 @@ export const userOverviewChartData = [
 // Initial zero-state arrays for dynamic live increments
 export const initialEnrollments = [];
 export const initialMessages = [];
-export const initialCourses = [];
+export const initialCourses = [
+  {
+    id:1,
+    title:'python programming',
+    
+  }
+];
 export const initialNotifications = [];
 
 export const initialEvents = [

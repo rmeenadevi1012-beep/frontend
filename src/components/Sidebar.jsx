@@ -1,151 +1,150 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  GraduationCap,
+  LayoutDashboard,
   Home,
+  Info,
+  GraduationCap,
   BookOpen,
-  Settings,
-  Image as GalleryIcon,
-  HelpCircle,
+  Image as ImageIcon,
   Mail,
+  LogIn,
   LogOut,
-  X,
+  ChevronLeft,
+  ChevronRight,
+  X
 } from 'lucide-react';
 
-function Sidebar({ isMobileOpen, onClose, onLogoutClick }) {
+export default function Sidebar({
+  isCollapsed,
+  onToggleCollapse,
+  isMobileOpen,
+  onCloseMobile,
+  coursesCount = 15,
+  onLogout
+}) {
   const navigate = useNavigate();
 
-  const handleNavClick = () => {
-    if (onClose) {
-      onClose();
-    }
-  };
-
-  const handleLogout = (e) => {
-    e.preventDefault();
-    if (onClose) {
-      onClose();
-    }
-    if (onLogoutClick) {
-      onLogoutClick();
-    } else {
-      navigate('/logout');
-    }
-  };
+  const navItems = [
+    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
+    { name: 'Home', path: '/home', icon: Home },
+    { name: 'About Us', path: '/about', icon: Info },
+    { name: 'Admissions', path: '/admissions', icon: GraduationCap },
+    {
+      name: 'Courses',
+      path: '/courses',
+      icon: BookOpen,
+      badge: `${coursesCount}+`
+    },
+    { name: 'Gallery', path: '/gallery', icon: ImageIcon },
+    { name: 'Contact', path: '/contact', icon: Mail },
+    { name: 'Login', path: '/login', icon: LogIn }
+  ];
 
   return (
-    <aside className={`el-sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
-      <div className="el-sidebar-content">
-        {/* Mobile Close Button */}
-        <button
-          type="button"
-          className="el-sidebar-close-btn"
-          onClick={onClose}
-          aria-label="Close sidebar"
-        >
-          <X size={20} />
-        </button>
+    <>
+      {/* Mobile Backdrop */}
+      {isMobileOpen && (
+        <div
+          className="sidebar-backdrop show"
+          onClick={onCloseMobile}
+          aria-label="Close Mobile Sidebar"
+        />
+      )}
 
+      <aside
+        className={`crm-sidebar ${isCollapsed ? 'collapsed' : ''} ${
+          isMobileOpen ? 'mobile-open' : ''
+        }`}
+      >
         {/* Brand Header */}
-        <NavLink to="/" className="el-sidebar-header" onClick={handleNavClick}>
-          <div className="el-sidebar-logo-icon">
-            <GraduationCap size={42} strokeWidth={2.2} />
+        <div className="crm-sidebar-header">
+          <div className="crm-logo-container" onClick={() => navigate('/')}>
+            <div className="crm-logo-icon">
+              <GraduationCap size={28} color="#ffffff" />
+            </div>
+            {!isCollapsed && (
+              <div className="crm-brand-text">
+                <h1 className="crm-school-name">Little Champs Kids School</h1>
+                <span className="crm-school-sub">CRM Admin Panel</span>
+              </div>
+            )}
           </div>
-          <h2 className="el-sidebar-title">EduLearn</h2>
-          <h3 className="el-sidebar-subtitle">CRM</h3>
-        </NavLink>
 
-        {/* Navigation Menu in EXACT order requested */}
-        <nav className="el-sidebar-menu">
-          {/* 1. Home */}
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              `el-sidebar-link ${isActive ? 'active' : ''}`
-            }
-            onClick={handleNavClick}
-          >
-            <Home size={19} strokeWidth={2.2} />
-            <span>Home</span>
-          </NavLink>
-
-          {/* 2. Courses */}
-          <NavLink
-            to="/courses"
-            className={({ isActive }) =>
-              `el-sidebar-link ${isActive ? 'active' : ''}`
-            }
-            onClick={handleNavClick}
-          >
-            <BookOpen size={19} strokeWidth={2.2} />
-            <span>Courses</span>
-          </NavLink>
-
-          {/* 3. Services */}
-          <NavLink
-            to="/services"
-            className={({ isActive }) =>
-              `el-sidebar-link ${isActive ? 'active' : ''}`
-            }
-            onClick={handleNavClick}
-          >
-            <Settings size={19} strokeWidth={2.2} />
-            <span>Services</span>
-          </NavLink>
-
-          {/* 4. Gallery */}
-          <NavLink
-            to="/gallery"
-            className={({ isActive }) =>
-              `el-sidebar-link ${isActive ? 'active' : ''}`
-            }
-            onClick={handleNavClick}
-          >
-            <GalleryIcon size={19} strokeWidth={2.2} />
-            <span>Gallery</span>
-          </NavLink>
-
-          {/* 5. FAQ */}
-          <NavLink
-            to="/faq"
-            className={({ isActive }) =>
-              `el-sidebar-link ${isActive ? 'active' : ''}`
-            }
-            onClick={handleNavClick}
-          >
-            <HelpCircle size={19} strokeWidth={2.2} />
-            <span>FAQ</span>
-          </NavLink>
-
-          {/* 6. Contact */}
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              `el-sidebar-link ${isActive ? 'active' : ''}`
-            }
-            onClick={handleNavClick}
-          >
-            <Mail size={19} strokeWidth={2.2} />
-            <span>Contact</span>
-          </NavLink>
-        </nav>
-
-        {/* 7. Logout pinned at the bottom */}
-        <div className="el-sidebar-bottom">
+          {/* Mobile Close Button */}
           <button
-            type="button"
-            className="el-sidebar-logout-btn"
-            onClick={handleLogout}
-            title="Log out of EduLearn CRM"
+            className="crm-sidebar-close-btn"
+            onClick={onCloseMobile}
+            aria-label="Close Sidebar"
           >
-            <LogOut size={19} strokeWidth={2.2} />
-            <span>Logout</span>
+            <X size={20} />
           </button>
         </div>
-      </div>
-    </aside>
+
+        {/* Sidebar Nav Links */}
+        <nav className="crm-sidebar-nav">
+          <ul className="crm-nav-list">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.name} className="crm-nav-item">
+                  <NavLink
+                    to={item.path}
+                    end={item.path === '/'}
+                    className={({ isActive }) =>
+                      `crm-nav-link ${isActive ? 'active' : ''}`
+                    }
+                    onClick={() => {
+                      if (onCloseMobile) onCloseMobile();
+                    }}
+                    title={isCollapsed ? item.name : undefined}
+                  >
+                    <span className="crm-nav-icon">
+                      <Icon size={20} />
+                    </span>
+                    {!isCollapsed && (
+                      <span className="crm-nav-label">{item.name}</span>
+                    )}
+                    {!isCollapsed && item.badge && (
+                      <span className="crm-nav-badge">{item.badge}</span>
+                    )}
+                  </NavLink>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Bottom Actions */}
+        <div className="crm-sidebar-footer">
+          <button
+            className="crm-logout-btn"
+            onClick={() => {
+              if (onLogout) onLogout();
+              else navigate('/login');
+            }}
+            title={isCollapsed ? 'Logout' : undefined}
+          >
+            <span className="crm-logout-icon">
+              <LogOut size={20} />
+            </span>
+            {!isCollapsed && <span>Logout</span>}
+          </button>
+
+          {/* Desktop Collapse Toggle */}
+          <button
+            className="crm-collapse-toggle-btn"
+            onClick={onToggleCollapse}
+            aria-label={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+            title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+          >
+            {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          </button>
+        </div>
+
+        {/* Subtle Decorative Wave at bottom corner matching design */}
+        <div className="crm-sidebar-wave" />
+      </aside>
+    </>
   );
 }
-
-export default Sidebar;

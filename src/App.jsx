@@ -1,436 +1,483 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import './styles/edulearn.css';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import './App.css';
+
+// Components
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
-import HomeDashboard from './components/pages/HomeDashboard';
-import CoursesPage from './components/pages/CoursesPage';
-import ServicesPage from './components/pages/ServicesPage';
-import GalleryPage from './components/pages/GalleryPage';
-import FaqPage from './components/pages/FaqPage';
-import ContactPage from './components/pages/ContactPage';
-import PublicEnrollmentPage from './components/pages/PublicEnrollmentPage';
+import AddStudentModal from './components/AddStudentModal';
+import ReportsModal from './components/ReportsModal';
 
-// Modals
-import AddCourseModal from './components/modals/AddCourseModal';
-import AddStudentModal from './components/modals/AddStudentModal';
-import ReportsModal from './components/modals/ReportsModal';
-import ManageUsersModal from './components/modals/ManageUsersModal';
-import LogoutModal from './components/modals/LogoutModal';
-import SearchResultsModal from './components/modals/SearchResultsModal';
+// Pages
+import Dashboard from './pages/Dashboard';
+import Courses from './pages/Courses';
+import CourseDetails from './pages/CourseDetails';
+import Admissions from './pages/Admissions';
+import Gallery from './pages/Gallery';
+import Contact from './pages/Contact';
+import AboutUs from './pages/AboutUs';
+import Login from './pages/Login';
 
-// Zero Initial Mock Data
-import {
-  initialStats,
-  userOverviewChartData,
-  initialEnrollments,
-  initialMessages,
-  initialEvents,
-  initialCourses,
-  initialServices,
-  initialNotifications,
-} from './data/mockData';
+// Initial Data
+import { initialCoursesData } from './data/courses';
 
-// Helper to safely read from localStorage
+// Safe localStorage helper
 const getStored = (key, fallback) => {
   try {
-    const item = localStorage.getItem(`edulearn_${key}`);
+    const item = localStorage.getItem(`littlechamps_${key}`);
     return item ? JSON.parse(item) : fallback;
   } catch {
     return fallback;
   }
 };
 
-function App() {
-  // Application Data States (Zero-initial with localStorage persistence)
-  const [stats, setStats] = useState(() => getStored('stats', initialStats));
-  const [chartData, setChartData] = useState(() => getStored('chart', userOverviewChartData));
-  const [enrollments, setEnrollments] = useState(() => getStored('enrollments', initialEnrollments));
-  const [courses, setCourses] = useState(() => getStored('courses', initialCourses));
-  const [messages, setMessages] = useState(() => getStored('messages', initialMessages));
-  const [notifications, setNotifications] = useState(() => getStored('notifications', initialNotifications));
-  const [events] = useState(initialEvents);
-  const [services] = useState(initialServices);
+export default function App() {
+  const navigate = useNavigate();
+
+  // 1. Initial 15 Courses (Persisted in localStorage)
+  const [courses, setCourses] = useState(() =>
+    getStored('courses', initialCoursesData)
+  );
+
+  // 2. Strict ZERO INITIAL Dashboard Statistics as specified in Section 3
+  const [stats, setStats] = useState(() =>
+    getStored('stats', {
+      totalStudents: 0,
+      totalAdmissions: 0,
+      newAdmissions: 0,
+      totalEnquiries: 0
+    })
+  );
+
+  // 3. Admissions Records (Empty array initially - no fake records)
+  const [admissions, setAdmissions] = useState(() =>
+    getStored('admissions', [])
+  );
+
+  // 4. Enquiries (Empty array initially)
+  const [enquiries, setEnquiries] = useState(() =>
+    getStored('enquiries', [])
+  );
+
+  // 5. Gallery Uploads (Empty array initially)
+  const [galleryUploads, setGalleryUploads] = useState(() =>
+    getStored('gallery', [])
+  );
+
+  // 6. Programs Count (0 initially)
+  const [programsCount] = useState(0);
+
+  // 7. Notifications
+  const [notifications, setNotifications] = useState(() =>
+    getStored('notifications', [])
+  );
 
   // UI States
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [activeModal, setActiveModal] = useState(null); // 'addCourse' | 'addStudent' | 'reports' | 'manageUsers' | 'logout' | 'search'
-  const [enrollingCourse, setEnrollingCourse] = useState(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [globalSearch, setGlobalSearch] = useState('');
   const [toastMessage, setToastMessage] = useState(null);
 
-  // Synchronize state changes to localStorage
+  // Active Modals
+  const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
+  const [isReportsModalOpen, setIsReportsModalOpen] = useState(false);
+  const [selectedCourseForEnroll, setSelectedCourseForEnroll] = useState(null);
+
+  // Persist state changes to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('edulearn_stats', JSON.stringify(stats));
-      localStorage.setItem('edulearn_chart', JSON.stringify(chartData));
-      localStorage.setItem('edulearn_enrollments', JSON.stringify(enrollments));
-      localStorage.setItem('edulearn_courses', JSON.stringify(courses));
-      localStorage.setItem('edulearn_messages', JSON.stringify(messages));
-      localStorage.setItem('edulearn_notifications', JSON.stringify(notifications));
+      localStorage.setItem('littlechamps_courses', JSON.stringify(courses));
+      localStorage.setItem('littlechamps_stats', JSON.stringify(stats));
+      localStorage.setItem('littlechamps_admissions', JSON.stringify(admissions));
+      localStorage.setItem('littlechamps_enquiries', JSON.stringify(enquiries));
+      localStorage.setItem('littlechamps_gallery', JSON.stringify(galleryUploads));
+      localStorage.setItem('littlechamps_notifications', JSON.stringify(notifications));
     } catch {
-      // Ignore write errors
+      // Ignore storage errors
     }
-  }, [stats, chartData, enrollments, courses, messages, notifications]);
+  }, [courses, stats, admissions, enquiries, galleryUploads, notifications]);
 
-  const showToast = (msg) => {
-    setToastMessage(msg);
+  // Toast Helper
+  const showToast = (message) => {
+    setToastMessage(message);
     setTimeout(() => {
       setToastMessage(null);
-    }, 3200);
+    }, 3500);
   };
 
-  // 1. Action: Add New Course (Increments Total Courses by +1)
+  // -------------------------------------------------------------
+  // Dynamic State Modifiers (Increments counts ONLY on user action)
+  // -------------------------------------------------------------
+
+  // Add Course Handler
   const handleAddCourse = (newCourse) => {
     setCourses((prev) => [newCourse, ...prev]);
-
-    // Increment Total Courses Stat
-    setStats((prev) =>
-      prev.map((s) => {
-        if (s.id === 'courses') {
-          const current = parseInt(s.value.replace(/,/g, '') || '0', 10);
-          return { ...s, value: (current + 1).toString(), change: '+100%' };
-        }
-        return s;
-      })
-    );
-
-    // Update User Overview chart Courses metric
-    setChartData((prev) =>
-      prev.map((item, index) =>
-        index === prev.length - 1
-          ? { ...item, Courses: (item.Courses || 0) + 1 }
-          : item
-      )
-    );
-
-    // Add Notification (+1 badge)
+    showToast(`✓ Course "${newCourse.name}" created successfully!`);
+    
+    // Add Notification
     setNotifications((prev) => [
       {
         id: Date.now(),
-        title: 'New Course Added',
-        message: `${newCourse.name} (${newCourse.code}) created successfully`,
+        text: `New Course created: ${newCourse.name}`,
         time: 'Just now',
-        unread: true,
+        unread: true
       },
-      ...prev,
+      ...prev
     ]);
-
-    showToast(`✓ Course "${newCourse.name}" created! Total Courses is now updated.`);
   };
 
-  // 2. Action: Enroll Student (Increments Total Enrollments & Total Students by +1)
-  const handleAddStudent = (newStudent) => {
-    setEnrollments((prev) => [newStudent, ...prev]);
-
-    // Increment Total Students Stat & Total Enrollments Stat
-    setStats((prev) =>
-      prev.map((s) => {
-        if (s.id === 'students') {
-          const current = parseInt(s.value.replace(/,/g, '') || '0', 10);
-          return { ...s, value: (current + 1).toLocaleString(), change: '+100%' };
-        }
-        if (s.id === 'enrollments') {
-          const current = parseInt(s.value.replace(/,/g, '') || '0', 10);
-          return { ...s, value: (current + 1).toLocaleString(), change: '+100%' };
-        }
-        return s;
-      })
+  // Update Course Handler
+  const handleUpdateCourse = (updatedCourse) => {
+    setCourses((prev) =>
+      prev.map((c) => (c.id === updatedCourse.id ? updatedCourse : c))
     );
+    showToast(`✓ Course "${updatedCourse.name}" updated successfully!`);
+  };
 
-    // Update enrolled count for the specific course if it exists
+  // Delete Course Handler
+  const handleDeleteCourse = (courseId) => {
+    setCourses((prev) => prev.filter((c) => c.id !== courseId));
+    showToast('Course removed from curriculum.');
+  };
+
+  // Add Student / Admission Handler -> INCREMENTS Total Students & Total Admissions
+  const handleAddAdmission = (newRecord) => {
+    setAdmissions((prev) => [newRecord, ...prev]);
+
+    // Dynamically increment stats
+    setStats((prev) => ({
+      ...prev,
+      totalStudents: prev.totalStudents + 1,
+      totalAdmissions: prev.totalAdmissions + 1,
+      newAdmissions: prev.newAdmissions + 1
+    }));
+
+    // Update course enrolledCount if course matches
     setCourses((prev) =>
       prev.map((c) =>
-        c.name === newStudent.course
-          ? { ...c, enrolled: (c.enrolled || 0) + 1 }
+        c.name === newRecord.course
+          ? { ...c, enrolledCount: (c.enrolledCount || 0) + 1 }
           : c
       )
     );
 
-    // Update User Overview chart Students metric
-    setChartData((prev) =>
-      prev.map((item, index) =>
-        index === prev.length - 1
-          ? { ...item, Students: (item.Students || 0) + 1 }
-          : item
-      )
-    );
-
-    // Add Notification (+1 badge)
+    // Add notification
     setNotifications((prev) => [
       {
         id: Date.now(),
-        title: 'New Student Enrollment',
-        message: `${newStudent.studentName} enrolled in ${newStudent.course}`,
+        text: `New Admission: ${newRecord.name} in ${newRecord.course}`,
         time: 'Just now',
-        unread: true,
+        unread: true
       },
-      ...prev,
+      ...prev
     ]);
 
-    showToast(`✓ Student "${newStudent.studentName}" enrolled! Counts incremented.`);
+    showToast(`✓ Student "${newRecord.name}" admitted! Counts incremented.`);
   };
 
-  // 3. Action: Add Inquiry from Contact Page (Increments New Inquiries by +1)
-  const handleAddInquiry = (newInquiry) => {
-    setMessages((prev) => [newInquiry, ...prev]);
+  // Delete Admission Handler
+  const handleDeleteAdmission = (admissionId) => {
+    setAdmissions((prev) => prev.filter((a) => a.id !== admissionId));
+    setStats((prev) => ({
+      ...prev,
+      totalStudents: Math.max(0, prev.totalStudents - 1),
+      totalAdmissions: Math.max(0, prev.totalAdmissions - 1),
+      newAdmissions: Math.max(0, prev.newAdmissions - 1)
+    }));
+    showToast('Admission record removed.');
+  };
 
-    // Increment Inquiries Stat
-    setStats((prev) =>
-      prev.map((s) => {
-        if (s.id === 'inquiries') {
-          const current = parseInt(s.value.replace(/,/g, '') || '0', 10);
-          return { ...s, value: (current + 1).toString(), change: '+100%' };
+  // Toggle Admission Status Handler
+  const handleToggleAdmissionStatus = (admissionId) => {
+    setAdmissions((prev) =>
+      prev.map((a) => {
+        if (a.id === admissionId) {
+          const nextStatus = a.status === 'Confirmed' ? 'Pending' : 'Confirmed';
+          return { ...a, status: nextStatus };
         }
-        return s;
+        return a;
       })
     );
+  };
 
-    // Add Notification (+1 badge)
+  // Add Enquiry Handler -> INCREMENTS Total Enquiries
+  const handleAddEnquiry = (newEnquiry) => {
+    setEnquiries((prev) => [newEnquiry, ...prev]);
+
+    setStats((prev) => ({
+      ...prev,
+      totalEnquiries: prev.totalEnquiries + 1
+    }));
+
     setNotifications((prev) => [
       {
         id: Date.now(),
-        title: 'New Inquiry Received',
-        message: `From ${newInquiry.from}: ${newInquiry.subject}`,
+        text: `New Enquiry from ${newEnquiry.from} (${newEnquiry.course})`,
         time: 'Just now',
-        unread: true,
+        unread: true
       },
-      ...prev,
+      ...prev
     ]);
 
-    showToast(`✓ Inquiry received from ${newInquiry.from}!`);
+    showToast(`✓ Enquiry from "${newEnquiry.from}" received! Count incremented.`);
   };
 
-  // 4. Action: Reset All Data to 0 for Clean Testing
+  // Delete Enquiry Handler
+  const handleDeleteEnquiry = (enquiryId) => {
+    setEnquiries((prev) => prev.filter((e) => e.id !== enquiryId));
+    setStats((prev) => ({
+      ...prev,
+      totalEnquiries: Math.max(0, prev.totalEnquiries - 1)
+    }));
+    showToast('Enquiry removed.');
+  };
+
+  // Add Gallery Upload Handler -> INCREMENTS Gallery Uploads
+  const handleAddGalleryUpload = (newUpload) => {
+    setGalleryUploads((prev) => [newUpload, ...prev]);
+    showToast(`✓ Photo "${newUpload.title}" uploaded! Gallery count updated.`);
+
+    setNotifications((prev) => [
+      {
+        id: Date.now(),
+        text: `New Gallery photo uploaded: ${newUpload.title}`,
+        time: 'Just now',
+        unread: true
+      },
+      ...prev
+    ]);
+  };
+
+  // Delete Gallery Upload Handler
+  const handleDeleteGalleryUpload = (uploadId) => {
+    setGalleryUploads((prev) => prev.filter((g) => g.id !== uploadId));
+    showToast('Gallery image removed.');
+  };
+
+  // Reset All CRM Data to ZERO (Clean slate testing)
   const handleResetAllData = () => {
+    setStats({
+      totalStudents: 0,
+      totalAdmissions: 0,
+      newAdmissions: 0,
+      totalEnquiries: 0
+    });
+    setAdmissions([]);
+    setEnquiries([]);
+    setGalleryUploads([]);
+    setCourses(initialCoursesData);
+    setNotifications([]);
+
     try {
-      localStorage.removeItem('edulearn_stats');
-      localStorage.removeItem('edulearn_chart');
-      localStorage.removeItem('edulearn_enrollments');
-      localStorage.removeItem('edulearn_courses');
-      localStorage.removeItem('edulearn_messages');
-      localStorage.removeItem('edulearn_notifications');
+      localStorage.removeItem('littlechamps_stats');
+      localStorage.removeItem('littlechamps_admissions');
+      localStorage.removeItem('littlechamps_enquiries');
+      localStorage.removeItem('littlechamps_gallery');
+      localStorage.removeItem('littlechamps_courses');
+      localStorage.removeItem('littlechamps_notifications');
     } catch {
       // Ignore
     }
 
-    setStats(initialStats);
-    setChartData(userOverviewChartData);
-    setEnrollments([]);
-    setCourses([]);
-    setMessages([]);
-    setNotifications([]);
-    showToast('✓ All CRM counts and data successfully reset to 0!');
+    showToast('✓ All CRM counts successfully reset to 0 with 15 standard courses!');
   };
 
-  const handleMarkNotificationRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, unread: false } : n))
-    );
-  };
-
-  const handleClearNotifications = () => {
+  const handleMarkNotificationsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
-    showToast('All notifications marked as read.');
-  };
-
-  const handleConfirmLogout = () => {
-    setActiveModal(null);
-    showToast('Administrator session closed.');
   };
 
   return (
-    <BrowserRouter>
-      <div className="el-app-container">
-        {/* 1. Exact Left Sidebar matching design */}
-        <Sidebar
-          isMobileOpen={isMobileOpen}
-          onClose={() => setIsMobileOpen(false)}
-          onLogoutClick={() => setActiveModal('logout')}
+    <div className="crm-app-layout">
+      {/* 1. Left Sidebar Navigation */}
+      <Sidebar
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        isMobileOpen={isMobileSidebarOpen}
+        onCloseMobile={() => setIsMobileSidebarOpen(false)}
+        coursesCount={courses.length}
+        onLogout={() => {
+          showToast('Administrator logged out.');
+          navigate('/login');
+        }}
+      />
+
+      {/* 2. Main Content Wrapper */}
+      <div
+        className={`crm-main-content ${
+          isSidebarCollapsed ? 'expanded-content' : ''
+        }`}
+      >
+        {/* Top Navbar */}
+        <Navbar
+          onToggleMobileSidebar={() =>
+            setIsMobileSidebarOpen(!isMobileSidebarOpen)
+          }
+          searchTerm={globalSearch}
+          onSearchChange={setGlobalSearch}
+          notifications={notifications}
+          onMarkNotificationsRead={handleMarkNotificationsRead}
+          onResetData={handleResetAllData}
         />
 
-        {/* Mobile Sidebar Backdrop */}
-        {isMobileOpen && (
-          <div
-            className="el-sidebar-backdrop"
-            onClick={() => setIsMobileOpen(false)}
-            aria-label="Close sidebar backdrop"
-          />
-        )}
-
-        {/* 2. Main Content Wrapper */}
-        <div className="el-main-wrapper">
-          {/* Top Navbar with Public Enrollment Toggle, Bell Badge & Admin Dropdown */}
-          <Navbar
-            onToggleSidebar={() => setIsMobileOpen(!isMobileOpen)}
-            searchTerm={searchTerm}
-            onSearchChange={(val) => {
-              setSearchTerm(val);
-              if (val.trim()) {
-                setActiveModal('search');
+        {/* View Router Pages */}
+        <main className="crm-content-area">
+          <Routes>
+            {/* Dashboard */}
+            <Route
+              path="/"
+              element={
+                <Dashboard
+                  stats={stats}
+                  courses={courses}
+                  admissions={admissions}
+                  enquiries={enquiries}
+                  galleryUploads={galleryUploads}
+                  programsCount={programsCount}
+                  onOpenAddCourse={() => navigate('/courses')}
+                  onOpenAddStudent={() => {
+                    setSelectedCourseForEnroll(null);
+                    setIsAddStudentModalOpen(true);
+                  }}
+                  onOpenReports={() => setIsReportsModalOpen(true)}
+                />
               }
-            }}
-            notifications={notifications}
-            onMarkNotificationRead={handleMarkNotificationRead}
-            onClearNotifications={handleClearNotifications}
-            onLogoutClick={() => setActiveModal('logout')}
-            onOpenManageUsers={() => setActiveModal('manageUsers')}
-            onResetAllData={handleResetAllData}
-          />
+            />
 
-          {/* Router View Pages */}
-          <main>
-            <Routes>
-              {/* Home Dashboard */}
-              <Route
-                path="/"
-                element={
-                  <HomeDashboard
-                    stats={stats}
-                    chartData={chartData}
-                    enrollments={enrollments}
-                    messages={messages}
-                    events={events}
-                    onAddCourse={() => setActiveModal('addCourse')}
-                    onAddStudent={() => {
-                      setEnrollingCourse(null);
-                      setActiveModal('addStudent');
-                    }}
-                    onViewReports={() => setActiveModal('reports')}
-                    onManageUsers={() => setActiveModal('manageUsers')}
-                    onViewAllOverview={() => setActiveModal('reports')}
-                    onViewAllEnrollments={() => setActiveModal('reports')}
-                    onViewAllMessages={() => setActiveModal('reports')}
-                    onViewAllEvents={() => setActiveModal('reports')}
-                    onSelectStudent={(s) =>
-                      showToast(`Selected student: ${s.studentName} (${s.course})`)
-                    }
-                    onSelectMessage={(m) =>
-                      showToast(`Message from: ${m.from} - ${m.subject}`)
-                    }
-                    onSelectEvent={(e) =>
-                      showToast(`Event: ${e.title} at ${e.location}`)
-                    }
-                  />
-                }
-              />
-              <Route path="/home" element={<Navigate to="/" replace />} />
-              <Route path="/Home" element={<Navigate to="/" replace />} />
+            {/* Home (aliases to Dashboard) */}
+            <Route
+              path="/home"
+              element={
+                <Dashboard
+                  stats={stats}
+                  courses={courses}
+                  admissions={admissions}
+                  enquiries={enquiries}
+                  galleryUploads={galleryUploads}
+                  programsCount={programsCount}
+                  onOpenAddCourse={() => navigate('/courses')}
+                  onOpenAddStudent={() => {
+                    setSelectedCourseForEnroll(null);
+                    setIsAddStudentModalOpen(true);
+                  }}
+                  onOpenReports={() => setIsReportsModalOpen(true)}
+                />
+              }
+            />
 
-              {/* Courses Page */}
-              <Route
-                path="/courses"
-                element={
-                  <CoursesPage
-                    courses={courses}
-                    onAddCourseClick={() => setActiveModal('addCourse')}
-                    onEnrollClick={(course) => {
-                      setEnrollingCourse(course);
-                      setActiveModal('addStudent');
-                    }}
-                  />
-                }
-              />
-              <Route path="/course" element={<Navigate to="/courses" replace />} />
-              <Route path="/Course" element={<Navigate to="/courses" replace />} />
+            {/* About Us */}
+            <Route path="/about" element={<AboutUs />} />
 
-              {/* Public Student Admissions / Enrollment View */}
-              <Route
-                path="/enroll"
-                element={
-                  <PublicEnrollmentPage
-                    courses={courses}
-                    onEnrollStudent={handleAddStudent}
-                  />
-                }
-              />
+            {/* Admissions Management */}
+            <Route
+              path="/admissions"
+              element={
+                <Admissions
+                  admissions={admissions}
+                  courses={courses}
+                  onAddAdmission={handleAddAdmission}
+                  onDeleteAdmission={handleDeleteAdmission}
+                  onToggleStatus={handleToggleAdmissionStatus}
+                />
+              }
+            />
 
-              {/* Services Page */}
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/service" element={<Navigate to="/services" replace />} />
-              <Route path="/Service" element={<Navigate to="/services" replace />} />
+            {/* 15 Courses Page */}
+            <Route
+              path="/courses"
+              element={
+                <Courses
+                  courses={courses}
+                  onAddCourse={handleAddCourse}
+                  onUpdateCourse={handleUpdateCourse}
+                  onDeleteCourse={handleDeleteCourse}
+                />
+              }
+            />
 
-              {/* Gallery Page */}
-              <Route path="/gallery" element={<GalleryPage />} />
-              <Route path="/Gallery" element={<Navigate to="/gallery" replace />} />
+            {/* Individual Course Details */}
+            <Route
+              path="/courses/:id"
+              element={
+                <CourseDetails
+                  courses={courses}
+                  onEnrollStudent={(course) => {
+                    setSelectedCourseForEnroll(course);
+                    setIsAddStudentModalOpen(true);
+                  }}
+                />
+              }
+            />
 
-              {/* FAQ Page */}
-              <Route path="/faq" element={<FaqPage />} />
-              <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
+            {/* Gallery Media */}
+            <Route
+              path="/gallery"
+              element={
+                <Gallery
+                  galleryUploads={galleryUploads}
+                  onAddUpload={handleAddGalleryUpload}
+                  onDeleteUpload={handleDeleteGalleryUpload}
+                />
+              }
+            />
 
-              {/* Contact Page */}
-              <Route
-                path="/contact"
-                element={<ContactPage onAddInquiry={handleAddInquiry} />}
-              />
-              <Route path="/Contact" element={<Navigate to="/contact" replace />} />
+            {/* Contact & Inquiries Desk */}
+            <Route
+              path="/contact"
+              element={
+                <Contact
+                  courses={courses}
+                  enquiries={enquiries}
+                  onAddEnquiry={handleAddEnquiry}
+                  onDeleteEnquiry={handleDeleteEnquiry}
+                />
+              }
+            />
 
-              {/* Catch-all */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-        </div>
+            {/* Login */}
+            <Route
+              path="/login"
+              element={
+                <Login
+                  onLoginSuccess={() =>
+                    showToast('Welcome back to Little Champs Admin Portal!')
+                  }
+                />
+              }
+            />
 
-        {/* Global Modals */}
-        <AddCourseModal
-          isOpen={activeModal === 'addCourse'}
-          onClose={() => setActiveModal(null)}
-          onAddCourse={handleAddCourse}
-        />
-
-        <AddStudentModal
-          isOpen={activeModal === 'addStudent'}
-          courses={courses}
-          selectedCourse={enrollingCourse}
-          onClose={() => {
-            setActiveModal(null);
-            setEnrollingCourse(null);
-          }}
-          onAddStudent={handleAddStudent}
-        />
-
-        <ReportsModal
-          isOpen={activeModal === 'reports'}
-          onClose={() => setActiveModal(null)}
-        />
-
-        <ManageUsersModal
-          isOpen={activeModal === 'manageUsers'}
-          onClose={() => setActiveModal(null)}
-        />
-
-        <LogoutModal
-          isOpen={activeModal === 'logout'}
-          onClose={() => setActiveModal(null)}
-          onConfirm={handleConfirmLogout}
-        />
-
-        <SearchResultsModal
-          isOpen={activeModal === 'search' && searchTerm.trim().length > 0}
-          searchTerm={searchTerm}
-          students={enrollments}
-          courses={courses}
-          services={services}
-          onClose={() => {
-            setActiveModal(null);
-            setSearchTerm('');
-          }}
-          onSelectStudent={(s) => {
-            showToast(`Selected student: ${s.studentName}`);
-          }}
-          onSelectCourse={(c) => {
-            showToast(`Selected course: ${c.name}`);
-          }}
-          onSelectService={(srv) => {
-            showToast(`Selected service: ${srv.title}`);
-          }}
-        />
-
-        {/* Action Toast Alert */}
-        {toastMessage && <div className="el-toast">{toastMessage}</div>}
+            {/* Catch-all redirect to Dashboard */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
       </div>
-    </BrowserRouter>
+
+      {/* Global Quick Add Student Modal */}
+      <AddStudentModal
+        isOpen={isAddStudentModalOpen}
+        courses={courses}
+        preselectedCourse={selectedCourseForEnroll}
+        onClose={() => {
+          setIsAddStudentModalOpen(false);
+          setSelectedCourseForEnroll(null);
+        }}
+        onAddStudent={handleAddAdmission}
+      />
+
+      {/* Global Analytics & Audit Reports Modal */}
+      <ReportsModal
+        isOpen={isReportsModalOpen}
+        onClose={() => setIsReportsModalOpen(false)}
+        stats={stats}
+        coursesCount={courses.length}
+        galleryCount={galleryUploads.length}
+      />
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="crm-toast-container">
+          <span>{toastMessage}</span>
+        </div>
+      )}
+    </div>
   );
 }
-
-export default App;

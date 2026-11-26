@@ -7,12 +7,12 @@ function CoursesPage({ courses = [], onAddCourseClick, onEnrollClick }) {
 
   const departments = [
     'All',
-    'Computer Applications',
-    'Commerce & Accounting',
-    'Management Studies',
-    'Mathematics',
-    'Humanities',
-    'Engineering',
+    'python full stack programming',
+    'javascript&modernwebdevelopment',
+    'react js&frontend engineering',
+    'full stack web development',
+    'java full stack development',
+    'data science&machine learning',
   ];
 
   const filtered = courses.filter((c) => {

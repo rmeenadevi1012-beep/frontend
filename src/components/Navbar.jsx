@@ -1,266 +1,224 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Menu,
   Search,
   Bell,
   ChevronDown,
   User,
-  Shield,
-  LogOut,
-  X,
-  GraduationCap,
-  LayoutDashboard,
+  ShieldCheck,
   RotateCcw,
+  LogOut,
+  CheckCircle,
+  ExternalLink
 } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
 
-function Navbar({
-  onToggleSidebar,
+export default function Navbar({
+  onToggleMobileSidebar,
   searchTerm,
   onSearchChange,
-  notifications,
-  onMarkNotificationRead,
-  onClearNotifications,
-  onLogoutClick,
-  onOpenManageUsers,
-  onResetAllData,
+  notifications = [],
+  onMarkNotificationsRead,
+  onResetData
 }) {
   const [showNotifications, setShowNotifications] = useState(false);
-  const [showAdminDropdown, setShowAdminDropdown] = useState(false);
-
+  const [showAdminMenu, setShowAdminMenu] = useState(false);
   const notifRef = useRef(null);
   const adminRef = useRef(null);
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const isPublicEnrollment = location.pathname === '/enroll';
+  const unreadCount = notifications.filter((n) => n.unread).length;
 
-  // Close dropdowns when clicking outside
+  // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event) {
       if (notifRef.current && !notifRef.current.contains(event.target)) {
         setShowNotifications(false);
       }
       if (adminRef.current && !adminRef.current.contains(event.target)) {
-        setShowAdminDropdown(false);
+        setShowAdminMenu(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const unreadCount = notifications ? notifications.filter((n) => n.unread).length : 0;
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm && searchTerm.trim()) {
+      navigate(`/courses?search=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
 
   return (
-    <header className="el-navbar">
-      {/* Left: Hamburger & Search */}
-      <div className="el-navbar-left">
+    <header className="crm-navbar">
+      <div className="crm-nav-left">
+        {/* Mobile Sidebar Hamburger Toggle */}
         <button
-          type="button"
-          className="el-hamburger-btn"
-          onClick={onToggleSidebar}
-          aria-label="Toggle navigation menu"
+          className="crm-hamburger-btn"
+          onClick={onToggleMobileSidebar}
+          aria-label="Toggle Navigation Menu"
         >
-          <Menu size={22} strokeWidth={2.2} />
+          <Menu size={22} />
         </button>
 
-        <div className="el-search-container">
-          <Search size={18} className="el-search-icon-left" />
-          <input
-            type="text"
-            className="el-search-input"
-            placeholder="Search users, courses, services..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-          />
-          {searchTerm ? (
-            <X
-              size={16}
-              className="el-search-icon-right"
-              onClick={() => onSearchChange('')}
-              title="Clear search"
+        {/* Global Search Bar matching reference image */}
+        <form className="crm-search-form" onSubmit={handleSearchSubmit}>
+          <div className="crm-search-input-wrapper">
+            <Search size={18} className="crm-search-icon" />
+            <input
+              type="text"
+              placeholder="Search users, courses, services..."
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="crm-search-input"
             />
-          ) : (
-            <Search size={16} className="el-search-icon-right" />
-          )}
-        </div>
+            {searchTerm && (
+              <button
+                type="button"
+                className="crm-search-clear"
+                onClick={() => onSearchChange('')}
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </form>
       </div>
 
-      {/* Right: Quick View Toggle, Notifications & Admin Profile */}
-      <div className="el-navbar-right">
-        {/* Quick View Toggle Button ("Public Enrollment View" vs "Admin Dashboard") */}
-        <button
-          type="button"
-          onClick={() => navigate(isPublicEnrollment ? '/' : '/enroll')}
-          className="el-view-toggle-btn"
-          title={isPublicEnrollment ? 'Return to Admin Dashboard' : 'Open Public Student Admissions Form to test enrollment'}
-        >
-          {isPublicEnrollment ? (
-            <>
-              <LayoutDashboard size={15} />
-              <span className="el-toggle-text-full">Admin Dashboard</span>
-              <span className="el-toggle-text-short">Admin</span>
-            </>
-          ) : (
-            <>
-              <GraduationCap size={15} />
-              <span className="el-toggle-text-full">Public Enrollment View</span>
-              <span className="el-toggle-text-short">Public View</span>
-            </>
-          )}
-        </button>
-
-        {/* Notification Bell */}
-        <div className="position-relative" ref={notifRef} style={{ position: 'relative' }}>
+      <div className="crm-nav-right">
+        {/* Notification Bell with Badge */}
+        <div className="crm-nav-dropdown-wrap" ref={notifRef}>
           <button
-            type="button"
-            className="el-notification-btn"
+            className="crm-icon-btn crm-notification-btn"
             onClick={() => setShowNotifications(!showNotifications)}
             aria-label="View notifications"
           >
-            <Bell size={21} strokeWidth={2.2} />
+            <Bell size={20} />
             {unreadCount > 0 && (
-              <span className="el-notification-badge">{unreadCount}</span>
+              <span className="crm-notification-badge">{unreadCount}</span>
             )}
           </button>
 
-          {/* Notifications Dropdown Panel */}
           {showNotifications && (
-            <div className="el-dropdown-panel" style={{ width: '330px' }}>
-              <div className="el-dropdown-header">
-                <span>Notifications ({unreadCount} new)</span>
+            <div className="crm-dropdown-panel crm-notifications-panel">
+              <div className="crm-dropdown-header">
+                <h4 className="crm-dropdown-title">Notifications</h4>
                 {unreadCount > 0 && (
                   <button
-                    type="button"
-                    style={{
-                      border: 'none',
-                      background: 'none',
-                      color: 'var(--el-purple-main)',
-                      fontSize: '12px',
-                      cursor: 'pointer',
-                      fontWeight: 600,
+                    className="crm-link-btn"
+                    onClick={() => {
+                      if (onMarkNotificationsRead) onMarkNotificationsRead();
                     }}
-                    onClick={onClearNotifications}
                   >
                     Mark all read
                   </button>
                 )}
               </div>
-
-              <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
-                {notifications && notifications.length > 0 ? (
-                  notifications.map((n) => (
-                    <div
-                      key={n.id}
-                      className={`el-dropdown-item ${n.unread ? 'unread' : ''}`}
-                      onClick={() => onMarkNotificationRead(n.id)}
-                    >
-                      <div
-                        style={{
-                          width: '8px',
-                          height: '8px',
-                          borderRadius: '50%',
-                          backgroundColor: n.unread ? '#6e34e2' : '#cbd5e1',
-                          marginTop: '6px',
-                          flexShrink: 0,
-                        }}
-                      />
-                      <div style={{ flex: 1 }}>
-                        <p className="el-notification-text-title">{n.title}</p>
-                        <p className="el-notification-text-desc">{n.message}</p>
-                        <p className="el-notification-text-time">{n.time}</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div style={{ padding: '24px 16px', textAlign: 'center', color: '#94a3b8', fontSize: '13px' }}>
-                    No notifications (Starts at 0)
+              <div className="crm-dropdown-body">
+                {notifications.length === 0 ? (
+                  <div className="crm-empty-state-dropdown">
+                    <CheckCircle size={28} color="#9ca3af" />
+                    <p>No new notifications</p>
                   </div>
+                ) : (
+                  <ul className="crm-notifications-list">
+                    {notifications.map((notif) => (
+                      <li
+                        key={notif.id}
+                        className={`crm-notif-item ${notif.unread ? 'unread' : ''}`}
+                      >
+                        <div className="crm-notif-dot" />
+                        <div className="crm-notif-content">
+                          <p className="crm-notif-text">{notif.text}</p>
+                          <span className="crm-notif-time">{notif.time}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
             </div>
           )}
         </div>
 
-        {/* Admin Profile */}
-        <div className="position-relative" ref={adminRef} style={{ position: 'relative' }}>
-          <div
-            className="el-admin-profile"
-            onClick={() => setShowAdminDropdown(!showAdminDropdown)}
+        {/* Admin Profile Dropdown matching reference image */}
+        <div className="crm-nav-dropdown-wrap" ref={adminRef}>
+          <button
+            className="crm-profile-btn"
+            onClick={() => setShowAdminMenu(!showAdminMenu)}
+            aria-label="Admin profile options"
           >
-            <div className="el-admin-avatar">A</div>
-            <span className="el-admin-name">Admin</span>
-            <ChevronDown size={14} className="el-admin-chevron" strokeWidth={2.5} />
-          </div>
+            <div className="crm-avatar-circle">A</div>
+            <span className="crm-profile-name">Admin</span>
+            <ChevronDown size={16} className="crm-chevron-icon" />
+          </button>
 
-          {/* Admin Profile Dropdown */}
-          {showAdminDropdown && (
-            <div className="el-dropdown-panel" style={{ width: '230px' }}>
-              <div
-                style={{
-                  padding: '14px 18px',
-                  borderBottom: '1px solid var(--el-border-light)',
-                  background: '#fcfaff',
-                }}
-              >
-                <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e202e' }}>
-                  Administrator
-                </div>
-                <div style={{ fontSize: '12px', color: '#6e34e2', fontWeight: 600 }}>
-                  Super Admin
-                </div>
-                <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
-                  admin@edulearn.edu
+          {showAdminMenu && (
+            <div className="crm-dropdown-panel crm-admin-dropdown">
+              <div className="crm-admin-card-header">
+                <div className="crm-avatar-circle large">A</div>
+                <div className="crm-admin-meta">
+                  <h5 className="crm-admin-fullname">System Administrator</h5>
+                  <span className="crm-admin-role">Little Champs Kids School</span>
+                  <span className="crm-admin-email">admin@littlechamps.edu</span>
                 </div>
               </div>
 
-              {/* Reset All Data to 0 Button */}
-              <div
-                className="el-dropdown-item"
-                onClick={() => {
-                  setShowAdminDropdown(false);
-                  if (window.confirm('Reset all CRM counts, enrollments, courses and inquiries back to 0?')) {
-                    onResetAllData();
-                  }
-                }}
-                style={{ color: '#d97706', background: '#fffbeb', borderBottom: '1px solid #fef3c7' }}
-              >
-                <RotateCcw size={15} color="#d97706" />
-                <span style={{ fontSize: '13px', fontWeight: 600 }}>Reset All Data to 0</span>
-              </div>
+              <div className="crm-dropdown-divider" />
 
-              <div
-                className="el-dropdown-item"
-                onClick={() => {
-                  setShowAdminDropdown(false);
-                  onOpenManageUsers();
-                }}
-              >
-                <User size={16} color="#6e34e2" />
-                <span style={{ fontSize: '13px', fontWeight: 500 }}>User Management</span>
-              </div>
+              <ul className="crm-admin-menu-list">
+                <li>
+                  <button
+                    className="crm-menu-action"
+                    onClick={() => {
+                      setShowAdminMenu(false);
+                      navigate('/courses');
+                    }}
+                  >
+                    <ShieldCheck size={16} />
+                    <span>Manage Courses (15)</span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="crm-menu-action"
+                    onClick={() => {
+                      setShowAdminMenu(false);
+                      navigate('/admissions');
+                    }}
+                  >
+                    <User size={16} />
+                    <span>Admissions Portal</span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="crm-menu-action text-danger"
+                    onClick={() => {
+                      setShowAdminMenu(false);
+                      if (onResetData) onResetData();
+                    }}
+                  >
+                    <RotateCcw size={16} />
+                    <span>Reset All CRM Data to 0</span>
+                  </button>
+                </li>
+              </ul>
 
-              <div
-                className="el-dropdown-item"
-                onClick={() => {
-                  setShowAdminDropdown(false);
-                  onOpenManageUsers();
-                }}
-              >
-                <Shield size={16} color="#6e34e2" />
-                <span style={{ fontSize: '13px', fontWeight: 500 }}>Role & Permissions</span>
-              </div>
+              <div className="crm-dropdown-divider" />
 
-              <div
-                className="el-dropdown-item"
-                onClick={() => {
-                  setShowAdminDropdown(false);
-                  onLogoutClick();
-                }}
-                style={{ color: '#ef4444' }}
-              >
-                <LogOut size={16} color="#ef4444" />
-                <span style={{ fontSize: '13px', fontWeight: 600 }}>Log Out</span>
+              <div className="crm-admin-menu-footer">
+                <button
+                  className="crm-menu-logout"
+                  onClick={() => {
+                    setShowAdminMenu(false);
+                    navigate('/login');
+                  }}
+                >
+                  <LogOut size={16} />
+                  <span>Logout</span>
+                </button>
               </div>
             </div>
           )}
@@ -269,5 +227,3 @@ function Navbar({
     </header>
   );
 }
-
-export default Navbar;
