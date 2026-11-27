@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 import './styles/edulearn.css';
+import { initialCoursesData } from './data/courses';
 
 // Components
 import EduLearnSidebar from './components/EduLearnSidebar';
@@ -38,7 +39,10 @@ const getStored = (key, fallback) => {
 
 function AppLayout() {
   const location = useLocation();
-  const [notifications] = useState(() => getStored('notifications', []));
+  const navigate = useNavigate();
+  const [notifications, setNotifications] = useState(() => getStored('notifications', []));
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
@@ -54,19 +58,36 @@ function AppLayout() {
 
   return (
     <div className="el-app-container">
-      <EduLearnSidebar />
+      {isMobileSidebarOpen && (
+        <div
+          className="el-sidebar-backdrop"
+          onClick={() => setIsMobileSidebarOpen(false)}
+          aria-label="Close Sidebar"
+        />
+      )}
+      <EduLearnSidebar
+        isMobileOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
+        onLogoutClick={() => {
+          setIsMobileSidebarOpen(false);
+          navigate('/login');
+        }}
+      />
       <div className="el-main-wrapper">
         <Navbar
-          onToggleMobileSidebar={() => {}}
-          searchTerm=""
-          onSearchChange={() => {}}
+          onToggleMobileSidebar={() => setIsMobileSidebarOpen((prev) => !prev)}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
           notifications={notifications}
+          onMarkNotificationsRead={() =>
+            setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })))
+          }
         />
         <main className="crm-content">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/courses" element={<Courses />} />
-            <Route path="/courses/:id" element={<CourseDetails />} />
+            <Route path="/courses/:id" element={<CourseDetails courses={initialCoursesData} />} />
             <Route path="/students" element={<Students />} />
             <Route path="/enquiries" element={<Enquiries />} />
             <Route path="/admissions" element={<Admissions />} />

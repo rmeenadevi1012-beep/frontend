@@ -11,7 +11,9 @@ import {
   Share2
 } from 'lucide-react';
 
-export default function CourseDetails({ courses, onEnrollStudent }) {
+import { initialCoursesData } from '../data/courses';
+
+export default function CourseDetails({ courses = initialCoursesData, onEnrollStudent }) {
   const { id } = useParams();
   const navigate = useNavigate();
 
